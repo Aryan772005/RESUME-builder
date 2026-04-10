@@ -57,7 +57,7 @@ const Navbar = () => {
           <div className="w-10 h-10 rounded-xl bg-gradient-premium flex items-center justify-center neon-glow group-hover:scale-110 transition-transform">
             <FileText className="text-white w-6 h-6" />
           </div>
-          <span className="text-xl font-bold tracking-tight">aryme <span className="text-gradient">Resume</span></span>
+          <span className="text-xl font-bold tracking-tight">Tariani's <span className="text-gradient">Resume</span></span>
         </Link>
         
         <div className="hidden md:flex items-center gap-8">
@@ -125,10 +125,10 @@ const Footer = () => (
           <div className="w-8 h-8 rounded-lg bg-gradient-premium flex items-center justify-center">
             <FileText className="text-white w-5 h-5" />
           </div>
-          <span className="text-lg font-bold">aryme Resume</span>
+          <span className="text-lg font-bold">Tariani's Resume Builder</span>
         </div>
         <p className="text-gray-400 max-w-sm mb-6">
-          Empowering professionals with smart resume building. Create ATS-friendly, visually stunning resumes in minutes.
+          A personal project by Aryan Singh Tariani. AI-powered resume builder with ATS-friendly templates, smart content generation, and instant PDF export.
         </p>
         <div className="flex gap-4">
           <a href="#" className="p-2 rounded-full glass hover:bg-white/10 hover:text-brand-cyan transition-colors"><Github className="w-5 h-5" /></a>
@@ -156,7 +156,7 @@ const Footer = () => (
       </div>
     </div>
     <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-brand-border text-center text-gray-500 text-sm">
-      © {new Date().getFullYear()} aryme Resume. All rights reserved.
+      © {new Date().getFullYear()} Aryan Singh Tariani. All rights reserved.
     </div>
   </footer>
 );
@@ -178,8 +178,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
         <div className="w-20 h-20 rounded-2xl bg-brand-purple/10 flex items-center justify-center mb-8">
           <FileText className="text-brand-purple w-10 h-10" />
         </div>
-        <h2 className="text-3xl font-bold mb-4">Sign in to create your resume</h2>
-        <p className="text-gray-400 max-w-md mb-8">You need an account to build, save, and download your professional resume.</p>
+        <h2 className="text-3xl font-bold mb-4">Sign in to continue</h2>
+        <p className="text-gray-400 max-w-md mb-8">You need a Google account to build, save, and download your professional resume.</p>
         <button 
           onClick={signIn}
           className="px-8 py-4 rounded-full bg-gradient-premium neon-glow-hover text-white font-bold text-lg flex items-center gap-2"

@@ -2,9 +2,9 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import {
-  Sparkles, FileText, Zap, Shield, ChevronRight, Star, CheckCircle2,
-  Users, Layout, ChevronDown, Globe, Cpu, Palette,
-  Clock, Quote, X, Upload, Download, Check
+  Sparkles, FileText, Zap, Shield, ChevronRight,
+  Layout, ChevronDown, Globe, Cpu, Palette,
+  Clock, X, Upload, Download
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -49,33 +49,6 @@ const FeatureCard = ({ icon: Icon, title, description, delay, gradient }: any) =
   </motion.div>
 );
 
-/* ─── TestimonialCard ───────────────────────────────────────────────────── */
-const TestimonialCard = ({ name, role, company, text, rating, delay, avatar }: any) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: '-50px' }}
-    transition={{ delay, duration: 0.5 }}
-    className="glass-card p-8 flex flex-col gap-5 relative"
-  >
-    <Quote className="absolute top-6 right-6 w-8 h-8 text-brand-cyan/20" />
-    <div className="flex gap-1">
-      {Array.from({ length: rating }).map((_, i) => (
-        <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-      ))}
-    </div>
-    <p className="text-gray-300 leading-relaxed text-sm">"{text}"</p>
-    <div className="flex items-center gap-3 mt-auto">
-      <div className="w-10 h-10 rounded-full bg-gradient-premium flex items-center justify-center font-bold text-sm shrink-0">
-        {avatar}
-      </div>
-      <div>
-        <div className="font-bold text-sm">{name}</div>
-        <div className="text-xs text-gray-500">{role} · {company}</div>
-      </div>
-    </div>
-  </motion.div>
-);
 
 /* ─── FAQ ───────────────────────────────────────────────────────────────── */
 const FAQItem = ({ question, answer, delay }: any) => {
@@ -125,22 +98,13 @@ export default function Home() {
     { icon: Clock, title: 'Auto-Save to Cloud', description: 'Your resume is synced in real-time to secure cloud storage. Never lose your work — pick up where you left off on any device.', gradient: 'bg-gradient-to-br from-brand-blue to-brand-purple' },
   ];
 
-  const testimonials = [
-    { name: 'Priya Sharma', role: 'Software Engineer', company: 'Google', text: "I landed my dream job at Google within 3 weeks of using aryme. The AI-generated bullet points made my experience sound 10x better than what I had before.", rating: 5, avatar: 'PS', delay: 0.1 },
-    { name: 'Marcus Johnson', role: 'Product Manager', company: 'Meta', text: "The ATS optimization is absolutely real. I went from getting zero callbacks to 4 interviews in the same week. This tool is a game-changer.", rating: 5, avatar: 'MJ', delay: 0.2 },
-    { name: 'Aisha Patel', role: 'Data Scientist', company: 'Stripe', text: "Clean, beautiful templates and the AI resume score feature helped me understand exactly what I was missing. Highly recommend to any job seeker.", rating: 5, avatar: 'AP', delay: 0.3 },
-    { name: 'Ryan Chen', role: 'UX Designer', company: 'Figma', text: "The creative template is stunning. My resume literally stood out visually and I got compliments on it during interviews. Worth every penny!", rating: 5, avatar: 'RC', delay: 0.1 },
-    { name: 'Sofia Martinez', role: 'Backend Engineer', company: 'Shopify', text: "Generated my entire resume in under 3 minutes with the AI generator. Just described my background and it built a perfect resume. Mind-blowing.", rating: 5, avatar: 'SM', delay: 0.2 },
-    { name: 'David Kim', role: 'DevOps Engineer', company: 'AWS', text: "I've tried 5 resume builders. This is the only one that feels premium. The interface is slick, fast and the results are professional.", rating: 5, avatar: 'DK', delay: 0.3 },
-  ];
-
   const faqs = [
-    { q: 'Is aryme Resume really free to use?', a: 'Yes! Our Basic plan is 100% free forever with no credit card required. You can build 1 resume and export it as a PDF. Upgrade to Pro for unlimited resumes, AI features, and all premium templates.', delay: 0.05 },
+    { q: 'Is Tariani\'s Resume Builder free to use?', a: 'Yes! You can build and download a resume completely for free. Just sign in with your Google account and start building right away — no credit card needed.', delay: 0.05 },
     { q: 'Are the resumes ATS-compatible?', a: 'Absolutely. Every template is built from the ground up to be fully parsed by modern Applicant Tracking Systems. We avoid complex tables, images in headers, and other elements that trip up ATS software.', delay: 0.1 },
     { q: 'How does the AI resume generator work?', a: 'Simply describe your professional background in plain English — your experience, skills, education, and target role. Our AI (powered by Google Gemini) will generate a complete, polished resume in seconds, which you can then edit and refine.', delay: 0.15 },
-    { q: 'Can I edit my resume after downloading?', a: 'Your resume data is always saved in your account. You can return anytime, make changes, and download a fresh PDF. With a Pro account, changes are synced across devices in real-time.', delay: 0.2 },
-    { q: 'What file formats can I export to?', a: 'Currently we support high-quality PDF export, which is the standard format required by employers worldwide. We are actively working on Word (.docx) export for a future release.', delay: 0.25 },
-    { q: 'Is my data private and secure?', a: 'Your resume data is stored securely in your personal account via Firebase. We never share or sell your data. Your information is only used to generate resume content within the app.', delay: 0.3 },
+    { q: 'Can I edit my resume after downloading?', a: 'Yes. Your resume data is saved to your account automatically. Return anytime, make changes, and re-download a fresh PDF.', delay: 0.2 },
+    { q: 'What file formats can I export to?', a: 'Currently we support high-quality PDF export — the standard format required by employers worldwide.', delay: 0.25 },
+    { q: 'Is my data private and secure?', a: 'Your resume data is stored securely in your personal Firebase account. It is only accessible to you when signed in. We never share or sell your data.', delay: 0.3 },
   ];
 
   return (
@@ -240,10 +204,9 @@ export default function Home() {
             style={{ opacity: 0.55 }}
           >
             <div className="flex items-center gap-2 font-bold text-base"><Zap className="w-4 h-4 text-brand-cyan" /> ATS-Ready</div>
-            <div className="flex items-center gap-2 font-bold text-base"><Shield className="w-4 h-4 text-brand-purple" /> Secure Cloud</div>
-            <div className="flex items-center gap-2 font-bold text-base"><Globe className="w-4 h-4 text-brand-blue" /> 50+ Countries</div>
-            <div className="flex items-center gap-2 font-bold text-base"><Star className="w-4 h-4 text-yellow-400" /> 4.9 / 5 Rating</div>
-            <div className="flex items-center gap-2 font-bold text-base"><Users className="w-4 h-4 text-brand-green" /> 100K+ Users</div>
+            <div className="flex items-center gap-2 font-bold text-base"><Shield className="w-4 h-4 text-brand-purple" /> Privacy First</div>
+            <div className="flex items-center gap-2 font-bold text-base"><Globe className="w-4 h-4 text-brand-blue" /> Google Gemini AI</div>
+            <div className="flex items-center gap-2 font-bold text-base"><FileText className="w-4 h-4 text-brand-green" /> Free PDF Export</div>
           </motion.div>
         </div>
 
@@ -265,15 +228,15 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* ── Stats ────────────────────────────────────────────────────── */}
+      {/* ── What's Inside ─────────────────────────────────────────────── */}
       <section id="stats" className="relative z-10 py-16 px-6 border-y border-brand-border bg-gradient-to-r from-brand-secondary/80 to-brand-dark">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
-              { label: 'Resumes Created', value: '100,000+', icon: FileText },
-              { label: 'Job Offers Landed', value: '45,000+', icon: CheckCircle2 },
-              { label: 'Premium Templates', value: '20+', icon: Layout },
-              { label: 'User Rating', value: '4.9 / 5', icon: Star },
+              { label: 'Resume Templates', value: '3', sub: 'Minimal · Modern · Creative', icon: Layout },
+              { label: 'AI Model', value: 'Gemini', sub: 'Google Gemini Flash', icon: Sparkles },
+              { label: 'PDF Export', value: 'Free', sub: 'Instant download', icon: FileText },
+              { label: 'Data Storage', value: 'Firebase', sub: 'Secure & private', icon: Shield },
             ].map((stat, i) => (
               <motion.div
                 key={i}
@@ -284,8 +247,9 @@ export default function Home() {
                 className="p-4 group"
               >
                 <stat.icon className="w-6 h-6 text-brand-cyan mx-auto mb-3 group-hover:scale-110 transition-transform" />
-                <div className="text-4xl font-black text-white mb-2 tracking-tight">{stat.value}</div>
-                <div className="text-sm text-brand-cyan font-bold uppercase tracking-wider">{stat.label}</div>
+                <div className="text-3xl font-black text-white mb-1 tracking-tight">{stat.value}</div>
+                <div className="text-sm text-brand-cyan font-bold uppercase tracking-wider mb-1">{stat.label}</div>
+                <div className="text-xs text-gray-500">{stat.sub}</div>
               </motion.div>
             ))}
           </div>
@@ -313,7 +277,7 @@ export default function Home() {
               viewport={{ once: true }}
               className="text-4xl md:text-5xl font-bold mb-4"
             >
-              Why Choose <span className="text-gradient">aryme Resume?</span>
+              Why Choose <span className="text-gradient">Tariani's Resume Builder?</span>
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 10 }}
@@ -425,7 +389,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Competitor Comparison ────────────────────────────────────── */}
+      {/* ── Built With ───────────────────────────────────────────────── */}
       <section className="relative z-10 py-24 px-6 bg-brand-secondary/30">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
@@ -435,9 +399,9 @@ export default function Home() {
               viewport={{ once: true }}
               className="text-4xl md:text-5xl font-bold mb-4"
             >
-              aryme vs <span className="text-gradient">The Competition</span>
+              Built With <span className="text-gradient">Modern Tech</span>
             </motion.h2>
-            <p className="text-gray-400 max-w-xl mx-auto">See why job seekers choose aryme over other builders.</p>
+            <p className="text-gray-400 max-w-xl mx-auto">An honest look at what powers this tool.</p>
           </div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -445,33 +409,30 @@ export default function Home() {
             viewport={{ once: true }}
             className="glass-card overflow-hidden"
           >
-            <div className="grid grid-cols-4 text-center text-sm font-bold border-b border-brand-border">
-              <div className="p-4 text-left text-gray-400">Feature</div>
-              <div className="p-4 bg-brand-cyan/5 text-brand-cyan">aryme ✦</div>
-              <div className="p-4 text-gray-500">Canva</div>
-              <div className="p-4 text-gray-500">Zety</div>
+            <div className="grid grid-cols-2 text-sm font-bold border-b border-brand-border">
+              <div className="p-4 text-left text-gray-400">Technology</div>
+              <div className="p-4 text-left text-brand-cyan">What it powers</div>
             </div>
             {[
-              ['AI Resume Generator', true, false, false],
-              ['ATS Optimized', true, false, true],
-              ['Free PDF Export', true, true, false],
-              ['Resume Score w/ Tips', true, false, false],
-              ['AI Cover Letter', true, false, true],
-              ['Cloud Sync', true, false, false],
-              ['No Watermarks (Free)', true, true, false],
-            ].map(([feature, aryme, canva, zety], i) => (
-              <div key={i} className={cn('grid grid-cols-4 text-center text-sm border-b border-brand-border/50 last:border-0', i % 2 === 0 ? 'bg-white/[0.01]' : '')}>
-                <div className="p-4 text-left text-gray-300 font-medium">{feature as string}</div>
-                <div className="p-4 bg-brand-cyan/5">{aryme ? <CheckCircle2 className="w-5 h-5 text-brand-cyan mx-auto" /> : <X className="w-5 h-5 text-gray-600 mx-auto" />}</div>
-                <div className="p-4">{canva ? <Check className="w-5 h-5 text-gray-400 mx-auto" /> : <X className="w-5 h-5 text-gray-600 mx-auto" />}</div>
-                <div className="p-4">{zety ? <Check className="w-5 h-5 text-gray-400 mx-auto" /> : <X className="w-5 h-5 text-gray-600 mx-auto" />}</div>
+              ['React + TypeScript', 'Full app UI and type-safe logic'],
+              ['Vite', 'Lightning-fast dev server and build tool'],
+              ['Tailwind CSS v4', 'All styling — utility-first, zero bloat'],
+              ['Google Gemini Flash', 'AI resume generation and cover letters'],
+              ['Firebase Auth', 'Secure Google Sign-In'],
+              ['Firestore', 'Real-time resume data sync to cloud'],
+              ['jsPDF + html2canvas', 'PDF export — generated 100% client-side'],
+              ['Framer Motion', 'All animations and transitions'],
+            ].map(([tech, role], i) => (
+              <div key={i} className={cn('grid grid-cols-2 text-sm border-b border-brand-border/50 last:border-0', i % 2 === 0 ? 'bg-white/[0.01]' : '')}>
+                <div className="p-4 text-left text-brand-cyan font-mono font-bold">{tech}</div>
+                <div className="p-4 text-left text-gray-300">{role}</div>
               </div>
             ))}
           </motion.div>
         </div>
       </section>
 
-      {/* ── Testimonials ─────────────────────────────────────────────── */}
+      {/* ── Open Source Note ─────────────────────────────────────────── */}
       <section className="relative z-10 py-24 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
@@ -481,13 +442,28 @@ export default function Home() {
               viewport={{ once: true }}
               className="text-4xl md:text-5xl font-bold mb-4"
             >
-              Stories of <span className="text-gradient">Success</span>
+              Made by <span className="text-gradient">Aryan Singh Tariani</span>
             </motion.h2>
-            <p className="text-gray-400 max-w-xl mx-auto">Real people. Real offers. Real results.</p>
+            <p className="text-gray-400 max-w-2xl mx-auto">This is a solo-built passion project — no VC funding, no team, no fake numbers. Just clean code, thoughtful design, and real AI tools to help anyone build a better resume.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testimonials.map((t, i) => (
-              <TestimonialCard key={i} {...t} />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            {[
+              { icon: Sparkles, title: 'AI-Powered', desc: 'Uses Google\'s Gemini API to generate entire resumes, summaries, and cover letters from plain-English descriptions.', color: 'text-brand-purple' },
+              { icon: Shield, title: 'Privacy First', desc: 'No tracking, no ads, no selling of data. Your resume stays in your own Firebase account — only you can access it.', color: 'text-brand-cyan' },
+              { icon: FileText, title: 'Completely Free', desc: 'Every feature — AI generation, PDF export, cloud save, all templates — is free to use. No paywalls, no trials.', color: 'text-brand-green' },
+            ].map((card, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="glass-card p-8 text-center group glass-card-hover"
+              >
+                <card.icon className={`w-10 h-10 mx-auto mb-5 ${card.color} group-hover:scale-110 transition-transform`} />
+                <h3 className="text-xl font-bold mb-3">{card.title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{card.desc}</p>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -517,11 +493,11 @@ export default function Home() {
                 </p>
                 <div className="space-y-4 mb-10">
                   {[
-                    { icon: CheckCircle2, text: 'Supports PNG, JPG, JPEG, WebP, GIF and .txt files', color: 'text-brand-cyan' },
-                    { icon: CheckCircle2, text: 'Combine unlimited files into one PDF', color: 'text-brand-cyan' },
-                    { icon: CheckCircle2, text: 'Reorder, remove and preview files before export', color: 'text-brand-cyan' },
-                    { icon: CheckCircle2, text: 'Choose page size: A4, Letter, or A3', color: 'text-brand-cyan' },
-                    { icon: CheckCircle2, text: 'Zero upload — processed entirely in your browser', color: 'text-brand-green' },
+                    { icon: Zap, text: 'Supports PNG, JPG, JPEG, WebP, GIF and .txt files', color: 'text-brand-cyan' },
+                    { icon: Zap, text: 'Combine unlimited files into one PDF', color: 'text-brand-cyan' },
+                    { icon: Zap, text: 'Reorder, remove and preview files before export', color: 'text-brand-cyan' },
+                    { icon: Zap, text: 'Choose page size: A4, Letter, or A3', color: 'text-brand-cyan' },
+                    { icon: Shield, text: 'Zero upload — processed entirely in your browser', color: 'text-brand-green' },
                   ].map((item, i) => (
                     <motion.div
                       key={i}
@@ -573,7 +549,7 @@ export default function Home() {
                     <div className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${f.color} shrink-0`}>{f.type}</div>
                     <span className="text-sm font-medium truncate flex-grow">{f.name}</span>
                     <span className="text-xs text-gray-500 shrink-0">{f.size}</span>
-                    <CheckCircle2 className="w-4 h-4 text-brand-green shrink-0" />
+                    <Upload className="w-4 h-4 text-brand-green shrink-0" />
                   </div>
                 ))}
                 <button className="w-full mt-4 py-3 rounded-xl bg-gradient-premium neon-glow text-white font-bold flex items-center justify-center gap-2">
