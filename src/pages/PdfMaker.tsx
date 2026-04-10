@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { jsPDF } from 'jspdf';
 import {
   Upload, FileText, Image, Trash2, Download, ChevronUp, ChevronDown,
-  File, CheckCircle2, AlertCircle, Loader2, Plus, X, GripVertical
+  File, CheckCircle2, AlertCircle, Loader2, Plus, X, GripVertical,
+  LayoutGrid, Square
 } from 'lucide-react';
 import { cn } from '../lib/utils';
 
@@ -18,6 +19,8 @@ interface FileItem {
   status: 'pending' | 'processing' | 'done' | 'error';
   errorMsg?: string;
 }
+
+type ImagesPerPage = 1 | 2 | 4 | 6;
 
 /* ── Helpers ────────────────────────────────────────────────────────────── */
 const formatBytes = (bytes: number) => {
@@ -34,6 +37,31 @@ const getFileType = (file: File): FileItem['type'] => {
 
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
+/** Load an <img> element from a URL and resolve when ready. */
+const loadImage = (src: string): Promise<HTMLImageElement> =>
+  new Promise((res, rej) => {
+    const img = new window.Image();
+    img.onload = () => res(img);
+    img.onerror = rej;
+    img.src = src;
+  });
+
+/** Returns the [cols, rows] grid for a given imagesPerPage value */
+const gridLayout = (ipp: ImagesPerPage): [number, number] => {
+  if (ipp === 1) return [1, 1];
+  if (ipp === 2) return [1, 2];  // portrait: 1 col, 2 rows
+  if (ipp === 4) return [2, 2];
+  return [2, 3]; // 6
+};
+
+/* ── Layout option cards ────────────────────────────────────────────────── */
+const LAYOUT_OPTIONS: { value: ImagesPerPage; label: string; grid: string }[] = [
+  { value: 1, label: '1 per page', grid: 'grid-cols-1 grid-rows-1' },
+  { value: 2, label: '2 per page', grid: 'grid-cols-1 grid-rows-2' },
+  { value: 4, label: '4 per page', grid: 'grid-cols-2 grid-rows-2' },
+  { value: 6, label: '6 per page', grid: 'grid-cols-2 grid-rows-3' },
+];
+
 /* ── Component ──────────────────────────────────────────────────────────── */
 export default function PdfMaker() {
   const [files, setFiles] = useState<FileItem[]>([]);
@@ -43,6 +71,7 @@ export default function PdfMaker() {
   const [outputName, setOutputName] = useState('my-document');
   const [pageSize, setPageSize] = useState<'a4' | 'letter' | 'a3'>('a4');
   const [margin, setMargin] = useState(10);
+  const [imagesPerPage, setImagesPerPage] = useState<ImagesPerPage>(1);
   const inputRef = useRef<HTMLInputElement>(null);
 
   /* ── File ingestion ── */
@@ -101,8 +130,6 @@ export default function PdfMaker() {
     if (files.length === 0) return;
     setIsGenerating(true);
     setSuccess(false);
-
-    // Mark all as processing
     setFiles(prev => prev.map(f => ({ ...f, status: 'processing' })));
 
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: pageSize });
@@ -111,82 +138,93 @@ export default function PdfMaker() {
     const usableW = pw - margin * 2;
     const usableH = ph - margin * 2;
 
-    let isFirst = true;
+    const imageFiles = files.filter(f => f.type === 'image');
+    const nonImageFiles = files.filter(f => f.type !== 'image');
 
-    for (let i = 0; i < files.length; i++) {
-      const item = files[i];
-      try {
-        if (item.type === 'image') {
-          await new Promise<void>((resolve, reject) => {
-            const img = new window.Image();
-            img.onload = () => {
-              try {
-                const ratio = img.naturalWidth / img.naturalHeight;
-                let imgW = usableW;
-                let imgH = imgW / ratio;
-                if (imgH > usableH) { imgH = usableH; imgW = imgH * ratio; }
-                const x = margin + (usableW - imgW) / 2;
-                const y = margin + (usableH - imgH) / 2;
+    const [cols, rows] = gridLayout(imagesPerPage);
+    const cellW = usableW / cols;
+    const cellH = usableH / rows;
+    const cellPad = 2; // mm gap between cells
 
-                if (!isFirst) pdf.addPage();
-                isFirst = false;
+    let isFirstPage = true;
 
-                // Determine format
-                const ext = item.file.name.split('.').pop()?.toLowerCase();
-                const fmt = (ext === 'jpg' || ext === 'jpeg') ? 'JPEG' : 'PNG';
-                pdf.addImage(img, fmt, x, y, imgW, imgH);
-                resolve();
-              } catch (err) { reject(err); }
-            };
-            img.onerror = reject;
-            img.src = item.preview!;
-          });
+    /* ── Render image pages ── */
+    for (let chunk = 0; chunk < imageFiles.length; chunk += imagesPerPage) {
+      const batch = imageFiles.slice(chunk, chunk + imagesPerPage);
 
-        } else if (item.type === 'text') {
-          const text = await item.file.text();
-          const lines = pdf.splitTextToSize(text, usableW);
-          const lineH = 6;
-          let y = margin + lineH;
+      if (!isFirstPage) pdf.addPage();
+      isFirstPage = false;
 
-          if (!isFirst) pdf.addPage();
-          isFirst = false;
+      for (let b = 0; b < batch.length; b++) {
+        const item = batch[b];
+        const colIdx = b % cols;
+        const rowIdx = Math.floor(b / cols);
 
-          // File name as heading
-          pdf.setFontSize(13);
-          pdf.setFont('helvetica', 'bold');
-          pdf.text(item.name, margin, margin + 5);
-          pdf.setFontSize(10);
-          pdf.setFont('helvetica', 'normal');
-          y = margin + 12;
+        const cellX = margin + colIdx * cellW;
+        const cellY = margin + rowIdx * cellH;
+        const availW = cellW - cellPad * 2;
+        const availH = cellH - cellPad * 2;
 
-          for (const line of lines) {
-            if (y + lineH > ph - margin) {
-              pdf.addPage();
-              y = margin + lineH;
-            }
-            pdf.text(line, margin, y);
-            y += lineH;
+        try {
+          const img = await loadImage(item.preview!);
+          const ratio = img.naturalWidth / img.naturalHeight;
+          let imgW = availW;
+          let imgH = imgW / ratio;
+          if (imgH > availH) { imgH = availH; imgW = imgH * ratio; }
+          const x = cellX + cellPad + (availW - imgW) / 2;
+          const y = cellY + cellPad + (availH - imgH) / 2;
+          const ext = item.file.name.split('.').pop()?.toLowerCase();
+          const fmt = (ext === 'jpg' || ext === 'jpeg') ? 'JPEG' : 'PNG';
+          pdf.addImage(img, fmt, x, y, imgW, imgH);
+
+          // File name label beneath image (only when >1 per page)
+          if (imagesPerPage > 1) {
+            pdf.setFontSize(6);
+            pdf.setFont('helvetica', 'normal');
+            pdf.setTextColor(120);
+            const label = item.name.length > 30 ? item.name.slice(0, 27) + '…' : item.name;
+            pdf.text(label, x + imgW / 2, y + imgH + 3, { align: 'center' });
+            pdf.setTextColor(0);
           }
-        } else {
-          // Unsupported — add a placeholder page
-          if (!isFirst) pdf.addPage();
-          isFirst = false;
-          pdf.setFontSize(14);
-          pdf.setFont('helvetica', 'bold');
-          pdf.text(`File: ${item.name}`, margin, margin + 20);
-          pdf.setFontSize(10);
-          pdf.setFont('helvetica', 'normal');
-          pdf.setTextColor(150);
-          pdf.text('(This file type cannot be embedded. Only images and .txt files are fully supported.)', margin, margin + 30, { maxWidth: usableW });
-          pdf.setTextColor(0);
-        }
 
-        // Mark done
-        setFiles(prev => prev.map(f => f.id === item.id ? { ...f, status: 'done' } : f));
-      } catch (err) {
-        console.error('Error adding file:', err);
-        setFiles(prev => prev.map(f => f.id === item.id ? { ...f, status: 'error', errorMsg: 'Failed to process' } : f));
+          setFiles(prev => prev.map(f => f.id === item.id ? { ...f, status: 'done' } : f));
+        } catch {
+          setFiles(prev => prev.map(f => f.id === item.id ? { ...f, status: 'error', errorMsg: 'Failed to process' } : f));
+        }
       }
+    }
+
+    /* ── Render non-image files ── */
+    for (const item of nonImageFiles) {
+      if (!isFirstPage) pdf.addPage();
+      isFirstPage = false;
+
+      if (item.type === 'text') {
+        const text = await item.file.text();
+        const lines = pdf.splitTextToSize(text, usableW);
+        const lineH = 6;
+        pdf.setFontSize(13);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text(item.name, margin, margin + 5);
+        pdf.setFontSize(10);
+        pdf.setFont('helvetica', 'normal');
+        let y = margin + 12;
+        for (const line of lines) {
+          if (y + lineH > ph - margin) { pdf.addPage(); y = margin + lineH; }
+          pdf.text(line, margin, y);
+          y += lineH;
+        }
+      } else {
+        pdf.setFontSize(14);
+        pdf.setFont('helvetica', 'bold');
+        pdf.text(`File: ${item.name}`, margin, margin + 20);
+        pdf.setFontSize(10);
+        pdf.setFont('helvetica', 'normal');
+        pdf.setTextColor(150);
+        pdf.text('(This file type cannot be embedded. Only images and .txt files are fully supported.)', margin, margin + 30, { maxWidth: usableW });
+        pdf.setTextColor(0);
+      }
+      setFiles(prev => prev.map(f => f.id === item.id ? { ...f, status: 'done' } : f));
     }
 
     pdf.save(`${outputName || 'document'}.pdf`);
@@ -206,6 +244,8 @@ export default function PdfMaker() {
     if (item.status === 'error') return <AlertCircle className="w-4 h-4 text-red-400" title={item.errorMsg} />;
     return null;
   };
+
+  const imageCount = files.filter(f => f.type === 'image').length;
 
   return (
     <div className="min-h-screen bg-brand-dark pt-28 pb-20 px-6">
@@ -252,7 +292,7 @@ export default function PdfMaker() {
             <label className="text-xs font-bold uppercase tracking-widest text-gray-500 block mb-2">Page Size</label>
             <select
               value={pageSize}
-              onChange={e => setPageSize(e.target.value as any)}
+              onChange={e => setPageSize(e.target.value as 'a4' | 'letter' | 'a3')}
               className="w-full bg-brand-secondary border border-brand-border rounded-xl px-4 py-2.5 text-sm outline-none input-glow appearance-none cursor-pointer"
             >
               <option value="a4">A4 (210 × 297 mm)</option>
@@ -271,6 +311,71 @@ export default function PdfMaker() {
               className="w-full mt-1 accent-brand-cyan"
             />
           </div>
+        </motion.div>
+
+        {/* ── Images Per Page Layout Selector ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.14 }}
+          className="glass-card p-6 mb-6"
+        >
+          <div className="flex items-center gap-3 mb-5">
+            <LayoutGrid className="w-5 h-5 text-brand-cyan" />
+            <div>
+              <h3 className="font-bold text-sm">Images Per Page</h3>
+              <p className="text-xs text-gray-500 mt-0.5">Choose how many images to pack on each PDF page</p>
+            </div>
+            {imageCount > 0 && (
+              <span className="ml-auto text-xs font-bold text-brand-cyan bg-brand-cyan/10 px-3 py-1 rounded-full">
+                {imageCount} image{imageCount !== 1 ? 's' : ''}
+                {' · '}
+                {Math.ceil(imageCount / imagesPerPage)} page{Math.ceil(imageCount / imagesPerPage) !== 1 ? 's' : ''}
+              </span>
+            )}
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {LAYOUT_OPTIONS.map(opt => (
+              <button
+                key={opt.value}
+                onClick={() => setImagesPerPage(opt.value)}
+                className={cn(
+                  'relative rounded-xl p-4 border-2 transition-all duration-200 group flex flex-col items-center gap-3',
+                  imagesPerPage === opt.value
+                    ? 'border-brand-cyan bg-brand-cyan/10 shadow-[0_0_16px_rgba(34,211,238,0.15)]'
+                    : 'border-brand-border bg-brand-secondary/50 hover:border-brand-cyan/40 hover:bg-brand-cyan/5'
+                )}
+              >
+                {/* Mini grid preview */}
+                <div className={cn('grid gap-1 w-12 h-12', opt.grid)}>
+                  {Array.from({ length: opt.value }).map((_, i) => (
+                    <div
+                      key={i}
+                      className={cn(
+                        'rounded-sm transition-colors',
+                        imagesPerPage === opt.value ? 'bg-brand-cyan/50' : 'bg-gray-600/50 group-hover:bg-brand-cyan/30'
+                      )}
+                    />
+                  ))}
+                </div>
+                <span className={cn(
+                  'text-xs font-bold transition-colors',
+                  imagesPerPage === opt.value ? 'text-brand-cyan' : 'text-gray-400 group-hover:text-white'
+                )}>
+                  {opt.label}
+                </span>
+                {imagesPerPage === opt.value && (
+                  <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-brand-cyan" />
+                )}
+              </button>
+            ))}
+          </div>
+          {imagesPerPage > 1 && (
+            <p className="text-xs text-gray-500 mt-3 flex items-center gap-1.5">
+              <Square className="w-3 h-3 text-brand-cyan" />
+              Images will be arranged in a <span className="text-brand-cyan font-bold">{gridLayout(imagesPerPage)[0]}×{gridLayout(imagesPerPage)[1]}</span> grid with file names shown below each.
+            </p>
+          )}
         </motion.div>
 
         {/* ── Drop Zone ── */}
@@ -323,6 +428,11 @@ export default function PdfMaker() {
               <div className="flex items-center justify-between px-6 py-4 border-b border-brand-border">
                 <h3 className="font-bold text-lg">
                   Files <span className="text-brand-cyan ml-1">{files.length}</span>
+                  {imageCount > 0 && (
+                    <span className="text-xs text-gray-500 ml-3 font-normal">
+                      {imageCount} image{imageCount !== 1 ? 's' : ''} → {Math.ceil(imageCount / imagesPerPage)} page{Math.ceil(imageCount / imagesPerPage) !== 1 ? 's' : ''}
+                    </span>
+                  )}
                 </h3>
                 <button
                   onClick={() => setFiles([])}
@@ -343,7 +453,6 @@ export default function PdfMaker() {
                       transition={{ duration: 0.2 }}
                       className="flex items-center gap-4 px-6 py-4 hover:bg-white/[0.02] group"
                     >
-                      {/* Drag handle visual */}
                       <GripVertical className="w-4 h-4 text-gray-600 shrink-0 cursor-grab" />
 
                       {/* Thumbnail / Icon */}
@@ -363,6 +472,9 @@ export default function PdfMaker() {
                         <p className="text-xs text-gray-500 flex items-center gap-2">
                           <span>{item.size}</span>
                           <span className={cn('px-1.5 py-0.5 rounded text-[10px] font-bold uppercase', item.type === 'image' ? 'bg-brand-cyan/10 text-brand-cyan' : item.type === 'text' ? 'bg-brand-purple/10 text-brand-purple' : 'bg-gray-700 text-gray-400')}>{item.type}</span>
+                          {item.type === 'image' && imagesPerPage > 1 && (
+                            <span className="text-[10px] text-gray-600">page {Math.floor(files.filter((f, fi) => f.type === 'image' && fi <= idx).length / imagesPerPage) + 1}</span>
+                          )}
                         </p>
                         {item.status === 'error' && <p className="text-xs text-red-400 mt-0.5">{item.errorMsg}</p>}
                       </div>
@@ -372,24 +484,13 @@ export default function PdfMaker() {
 
                       {/* Reorder + Delete */}
                       <div className="flex items-center gap-1 shrink-0">
-                        <button
-                          onClick={() => moveFile(item.id, 'up')}
-                          disabled={idx === 0}
-                          className="p-1.5 rounded-lg hover:bg-white/10 text-gray-500 hover:text-white disabled:opacity-20 transition-all"
-                        >
+                        <button onClick={() => moveFile(item.id, 'up')} disabled={idx === 0} className="p-1.5 rounded-lg hover:bg-white/10 text-gray-500 hover:text-white disabled:opacity-20 transition-all">
                           <ChevronUp className="w-4 h-4" />
                         </button>
-                        <button
-                          onClick={() => moveFile(item.id, 'down')}
-                          disabled={idx === files.length - 1}
-                          className="p-1.5 rounded-lg hover:bg-white/10 text-gray-500 hover:text-white disabled:opacity-20 transition-all"
-                        >
+                        <button onClick={() => moveFile(item.id, 'down')} disabled={idx === files.length - 1} className="p-1.5 rounded-lg hover:bg-white/10 text-gray-500 hover:text-white disabled:opacity-20 transition-all">
                           <ChevronDown className="w-4 h-4" />
                         </button>
-                        <button
-                          onClick={() => removeFile(item.id)}
-                          className="p-1.5 rounded-lg hover:bg-red-500/10 text-gray-500 hover:text-red-400 transition-all ml-1"
-                        >
+                        <button onClick={() => removeFile(item.id)} className="p-1.5 rounded-lg hover:bg-red-500/10 text-gray-500 hover:text-red-400 transition-all ml-1">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -455,7 +556,7 @@ export default function PdfMaker() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-12">
           {[
             { icon: Image, title: '100% Private', desc: 'Files never leave your browser. Everything is processed locally on your device.', color: 'text-brand-cyan' },
-            { icon: FileText, title: 'Multi-File Merge', desc: 'Combine unlimited images and text files into one clean, organized PDF.', color: 'text-brand-purple' },
+            { icon: LayoutGrid, title: 'Flexible Layout', desc: 'Choose 1, 2, 4, or 6 images per page. Perfect for photo sheets, portfolios, or collages.', color: 'text-brand-purple' },
             { icon: Download, title: 'Instant Download', desc: 'No sign-up needed. Click generate and your PDF downloads in seconds.', color: 'text-brand-green' },
           ].map((card, i) => (
             <motion.div
