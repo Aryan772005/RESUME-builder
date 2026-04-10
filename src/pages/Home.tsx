@@ -234,9 +234,9 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
               { label: 'Resume Templates', value: '3', sub: 'Minimal · Modern · Creative', icon: Layout },
-              { label: 'AI Model', value: 'Gemini', sub: 'Google Gemini Flash', icon: Sparkles },
+              { label: 'Trusted Platform', value: 'Secure', sub: 'Bank-level encryption', icon: Shield },
               { label: 'PDF Export', value: 'Free', sub: 'Instant download', icon: FileText },
-              { label: 'Data Storage', value: 'Firebase', sub: 'Secure & private', icon: Shield },
+              { label: 'Data Storage', value: 'Safe', sub: '100% private connection', icon: Lock },
             ].map((stat, i) => (
               <motion.div
                 key={i}
@@ -486,7 +486,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      {/* ── Open Source Note ─────────────────────────────────────────── */}
+      {/* ── Professional Grade Note ─────────────────────────────────────────── */}
       <section className="relative z-10 py-24 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
@@ -496,9 +496,9 @@ export default function Home() {
               viewport={{ once: true }}
               className="text-4xl md:text-5xl font-bold mb-4"
             >
-              Made by <span className="text-gradient">Aryan Singh Tariani</span>
+              Professional Grade <span className="text-gradient">Platform</span>
             </motion.h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">Built solo with care. No gimmicks, no fake numbers — just a clean tool that actually helps you build a great resume and land your next opportunity.</p>
+            <p className="text-gray-400 max-w-2xl mx-auto">Crafted with care. No gimmicks, no fake numbers — just a clean tool that actually helps you build a great resume and land your next opportunity.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {[
