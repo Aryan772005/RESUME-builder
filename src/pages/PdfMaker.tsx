@@ -264,7 +264,7 @@ export default function PdfMaker() {
             <span className="text-xs font-bold uppercase tracking-widest text-brand-cyan">Free Tool</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-black mb-4">
-            <span className="text-gradient">PDF Maker</span>
+            <span className="text-gradient">JPG to PDF Maker</span>
           </h1>
           <p className="text-gray-400 text-lg max-w-xl mx-auto">
             Drag and drop images or text files — combine, reorder, and download as a single polished PDF. No upload, 100% private.

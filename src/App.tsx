@@ -75,7 +75,7 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-8">
           <a href="/#features" onClick={(e) => { e.preventDefault(); handleSectionNav('features'); }} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">Features</a>
           <a href="/#templates" onClick={(e) => { e.preventDefault(); handleSectionNav('templates'); }} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">Templates</a>
-          <Link to="/pdf-maker" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">PDF Maker</Link>
+          <Link to="/pdf-maker" className="text-sm font-medium text-brand-cyan hover:text-white transition-colors">JPG to PDF Maker</Link>
           
           {user ? (
             <div className="flex items-center gap-4">
@@ -150,7 +150,7 @@ const Footer = () => (
         <h4 className="font-bold mb-6">Product</h4>
         <ul className="space-y-4 text-gray-400 text-sm">
           <li><Link to="/builder" className="hover:text-brand-cyan transition-colors">Resume Builder</Link></li>
-          <li><Link to="/pdf-maker" className="hover:text-brand-cyan transition-colors">PDF Maker</Link></li>
+          <li><Link to="/pdf-maker" className="hover:text-brand-cyan transition-colors">JPG to PDF Maker</Link></li>
           <li><a href="#" className="hover:text-brand-cyan transition-colors">Templates</a></li>
           <li><a href="#" className="hover:text-brand-cyan transition-colors">ATS Check</a></li>
         </ul>
