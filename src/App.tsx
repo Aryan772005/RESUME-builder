@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { FileText, Sparkles, Download, Layout as LayoutIcon, Github, Linkedin, Mail, Phone, MapPin, Plus, Trash2, Wand2, ChevronRight, Menu, X, LogIn, LogOut } from 'lucide-react';
+import { FileText, Github, Linkedin, Mail, ChevronRight, Menu, X, LogIn, LogOut } from 'lucide-react';
 import { cn } from './lib/utils';
 import Home from './pages/Home';
 import Builder from './pages/Builder';
 import PdfMaker from './pages/PdfMaker';
+import { Logo, LogoWordmark } from './components/Logo';
 import { useAuth } from './contexts/AuthContext';
 
 const NAVBAR_HEIGHT = 80;
@@ -53,11 +54,8 @@ const Navbar = () => {
       isScrolled ? "bg-brand-dark/80 backdrop-blur-md border-b border-brand-border py-3 shadow-[0_4px_30px_rgba(0,0,0,0.1)]" : "bg-transparent"
     )}>
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center gap-2 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-premium flex items-center justify-center neon-glow group-hover:scale-110 transition-transform">
-            <FileText className="text-white w-6 h-6" />
-          </div>
-          <span className="text-xl font-bold tracking-tight">Tariani's <span className="text-gradient">Resume</span></span>
+        <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="group">
+          <LogoWordmark iconSize={36} />
         </Link>
         
         <div className="hidden md:flex items-center gap-8">
@@ -122,9 +120,7 @@ const Footer = () => (
     <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
       <div className="col-span-1 md:col-span-2">
         <div className="flex items-center gap-2 mb-6">
-          <div className="w-8 h-8 rounded-lg bg-gradient-premium flex items-center justify-center">
-            <FileText className="text-white w-5 h-5" />
-          </div>
+          <Logo size={32} />
           <span className="text-lg font-bold">Tariani's Resume Builder</span>
         </div>
         <p className="text-gray-400 max-w-sm mb-6">
@@ -176,7 +172,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     return (
       <div className="min-h-screen bg-brand-dark flex flex-col items-center justify-center p-6 text-center">
         <div className="w-20 h-20 rounded-2xl bg-brand-purple/10 flex items-center justify-center mb-8">
-          <FileText className="text-brand-purple w-10 h-10" />
+          <Logo size={52} />
         </div>
         <h2 className="text-3xl font-bold mb-4">Sign in to continue</h2>
         <p className="text-gray-400 max-w-md mb-8">You need a Google account to build, save, and download your professional resume.</p>

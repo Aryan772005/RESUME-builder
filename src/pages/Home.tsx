@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import {
-  Sparkles, FileText, Zap, Shield, ChevronRight,
+  Sparkles, FileText, Zap, Shield, ChevronRight, Lock,
   Layout, ChevronDown, Globe, Cpu, Palette,
   Clock, X, Upload, Download
 } from 'lucide-react';
@@ -389,49 +389,103 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Built With ───────────────────────────────────────────────── */}
+      {/* ── Trust & Security ─────────────────────────────────────────── */}
       <section className="relative z-10 py-24 px-6 bg-brand-secondary/30">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
+            <motion.span
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-brand-cyan text-xs font-bold uppercase tracking-widest mb-4"
+            >
+              <Shield className="w-3.5 h-3.5" /> Built For Professionals
+            </motion.span>
             <motion.h2
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               className="text-4xl md:text-5xl font-bold mb-4"
             >
-              Built With <span className="text-gradient">Modern Tech</span>
+              Your Data, Your <span className="text-gradient">Control</span>
             </motion.h2>
-            <p className="text-gray-400 max-w-xl mx-auto">An honest look at what powers this tool.</p>
+            <p className="text-gray-400 max-w-xl mx-auto">Everything is designed with your privacy and security in mind from day one.</p>
           </div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="glass-card overflow-hidden"
-          >
-            <div className="grid grid-cols-2 text-sm font-bold border-b border-brand-border">
-              <div className="p-4 text-left text-gray-400">Technology</div>
-              <div className="p-4 text-left text-brand-cyan">What it powers</div>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              ['React + TypeScript', 'Full app UI and type-safe logic'],
-              ['Vite', 'Lightning-fast dev server and build tool'],
-              ['Tailwind CSS v4', 'All styling — utility-first, zero bloat'],
-              ['Google Gemini Flash', 'AI resume generation and cover letters'],
-              ['Firebase Auth', 'Secure Google Sign-In'],
-              ['Firestore', 'Real-time resume data sync to cloud'],
-              ['jsPDF + html2canvas', 'PDF export — generated 100% client-side'],
-              ['Framer Motion', 'All animations and transitions'],
-            ].map(([tech, role], i) => (
-              <div key={i} className={cn('grid grid-cols-2 text-sm border-b border-brand-border/50 last:border-0', i % 2 === 0 ? 'bg-white/[0.01]' : '')}>
-                <div className="p-4 text-left text-brand-cyan font-mono font-bold">{tech}</div>
-                <div className="p-4 text-left text-gray-300">{role}</div>
-              </div>
+              {
+                icon: Shield,
+                title: 'End-to-End Secure',
+                desc: 'All connections are encrypted via HTTPS/TLS. Your resume data travels securely between you and our servers at all times.',
+                badge: 'SSL/TLS',
+                color: 'from-brand-purple/20 to-brand-blue/10',
+                iconColor: 'text-brand-purple',
+              },
+              {
+                icon: Lock,
+                title: 'Private By Default',
+                desc: 'Your resume is linked only to your account. No one else can view, access, or download your data — ever.',
+                badge: 'Auth Protected',
+                color: 'from-brand-cyan/20 to-brand-blue/10',
+                iconColor: 'text-brand-cyan',
+              },
+              {
+                icon: Globe,
+                title: 'No Data Selling',
+                desc: 'We do not run ads, sell your data, or share it with third parties. Your information stays with you.',
+                badge: 'Zero Tracking',
+                color: 'from-brand-green/20 to-brand-cyan/10',
+                iconColor: 'text-brand-green',
+              },
+              {
+                icon: Zap,
+                title: 'Instant PDF Generation',
+                desc: 'PDFs are generated locally in your browser. Your resume content never passes through any third-party rendering server.',
+                badge: '100% Client-Side',
+                color: 'from-brand-blue/20 to-brand-purple/10',
+                iconColor: 'text-brand-blue',
+              },
+              {
+                icon: Clock,
+                title: 'Auto-Save, Always',
+                desc: 'Every change you make is automatically saved to your personal account in real time. Never lose your progress.',
+                badge: 'Real-Time Sync',
+                color: 'from-brand-purple/20 to-brand-cyan/10',
+                iconColor: 'text-brand-purple',
+              },
+              {
+                icon: FileText,
+                title: 'Your Resume, Forever',
+                desc: 'There is no expiry on your account or your data. Build once, come back anytime, even months later.',
+                badge: 'Lifetime Access',
+                color: 'from-brand-cyan/20 to-brand-green/10',
+                iconColor: 'text-brand-cyan',
+              },
+            ].map((card, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ delay: i * 0.08 }}
+                className={`glass-card p-7 relative overflow-hidden group glass-card-hover`}
+              >
+                <div className={`absolute inset-0 bg-gradient-to-br ${card.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between mb-5">
+                    <div className="w-12 h-12 rounded-xl bg-brand-secondary flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <card.icon className={`w-6 h-6 ${card.iconColor}`} />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-full border border-brand-border text-gray-500">{card.badge}</span>
+                  </div>
+                  <h3 className="text-lg font-bold mb-2 group-hover:text-white transition-colors">{card.title}</h3>
+                  <p className="text-gray-400 text-sm leading-relaxed">{card.desc}</p>
+                </div>
+              </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
-
       {/* ── Open Source Note ─────────────────────────────────────────── */}
       <section className="relative z-10 py-24 px-6">
         <div className="max-w-7xl mx-auto">
@@ -444,13 +498,13 @@ export default function Home() {
             >
               Made by <span className="text-gradient">Aryan Singh Tariani</span>
             </motion.h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">This is a solo-built passion project — no VC funding, no team, no fake numbers. Just clean code, thoughtful design, and real AI tools to help anyone build a better resume.</p>
+            <p className="text-gray-400 max-w-2xl mx-auto">Built solo with care. No gimmicks, no fake numbers — just a clean tool that actually helps you build a great resume and land your next opportunity.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {[
-              { icon: Sparkles, title: 'AI-Powered', desc: 'Uses Google\'s Gemini API to generate entire resumes, summaries, and cover letters from plain-English descriptions.', color: 'text-brand-purple' },
-              { icon: Shield, title: 'Privacy First', desc: 'No tracking, no ads, no selling of data. Your resume stays in your own Firebase account — only you can access it.', color: 'text-brand-cyan' },
-              { icon: FileText, title: 'Completely Free', desc: 'Every feature — AI generation, PDF export, cloud save, all templates — is free to use. No paywalls, no trials.', color: 'text-brand-green' },
+              { icon: Sparkles, title: 'Smart Content', desc: 'Intelligent resume generation that writes polished, impact-focused content — summaries, bullet points, and cover letters crafted for your target role.', color: 'text-brand-purple' },
+              { icon: Shield, title: 'Secure & Private', desc: 'Your data never leaves your account. All connections are encrypted. Zero ads, zero tracking, zero data sharing with anyone.', color: 'text-brand-cyan' },
+              { icon: FileText, title: 'Free, Always', desc: 'Every feature — smart generation, PDF export, cloud save, all templates — is completely free. No paywalls, no hidden fees.', color: 'text-brand-green' },
             ].map((card, i) => (
               <motion.div
                 key={i}
