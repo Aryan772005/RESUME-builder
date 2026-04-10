@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import {
   FileText, Zap, Shield, ChevronRight, Lock,
-  Layout, ChevronDown, Globe, Cpu, Palette,
+  Layout, ChevronDown, Globe, Cpu, Palette, Image,
   Clock, X, Upload, Download
 } from 'lucide-react';
 import { cn } from '../lib/utils';
@@ -96,6 +96,7 @@ export default function Home() {
     { icon: Cpu, title: 'Resume Score & Analysis', description: 'Get an instant smart score on your resume with 5 actionable suggestions to land more interviews.', gradient: 'bg-gradient-to-br from-brand-green to-brand-cyan' },
     { icon: Palette, title: 'Cover Letter Builder', description: 'Generate a tailored, professional cover letter in seconds — personalized to the job description you paste in.', gradient: 'bg-gradient-to-br from-brand-purple to-brand-cyan' },
     { icon: Clock, title: 'Auto-Save to Cloud', description: 'Your resume is synced in real-time to secure cloud storage. Never lose your work — pick up where you left off on any device.', gradient: 'bg-gradient-to-br from-brand-blue to-brand-purple' },
+    { icon: Image, title: 'JPG to PDF Converter', description: 'Easily convert your images and text documents into a clean, professional PDF file. Perfect for portfolios and documents.', gradient: 'bg-gradient-to-br from-brand-cyan to-brand-purple' },
   ];
 
   const faqs = [
