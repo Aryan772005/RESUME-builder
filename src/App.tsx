@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { FileText, Github, Linkedin, Mail, ChevronRight, Menu, X, LogIn, LogOut } from 'lucide-react';
 import { cn } from './lib/utils';
@@ -23,14 +23,17 @@ const ScrollToTop = () => {
   const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    // Small timeout ensures DOM is rendered before we scroll
     const timer = setTimeout(() => {
       if (hash) {
-        scrollToSection(hash.replace('#', ''));
+        const el = document.getElementById(hash.replace('#', ''));
+        if (el) {
+          const top = el.getBoundingClientRect().top + window.scrollY - NAVBAR_HEIGHT;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
       } else {
         window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       }
-    }, 50);
+    }, 80);  // wait for DOM paint after navigation
     return () => clearTimeout(timer);
   }, [pathname, hash]);
 
@@ -40,7 +43,18 @@ const ScrollToTop = () => {
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, signIn, signOut } = useAuth();
+
+  const handleSectionNav = (sectionId: string) => {
+    if (location.pathname === '/') {
+      // Already on home — just scroll
+      scrollToSection(sectionId);
+    } else {
+      // Navigate to home with hash, ScrollToTop will handle the scroll
+      navigate(`/#${sectionId}`);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -59,8 +73,8 @@ const Navbar = () => {
         </Link>
         
         <div className="hidden md:flex items-center gap-8">
-          <a href="/#features" onClick={(e) => { e.preventDefault(); scrollToSection('features'); }} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">Features</a>
-          <a href="/#templates" onClick={(e) => { e.preventDefault(); scrollToSection('templates'); }} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">Templates</a>
+          <a href="/#features" onClick={(e) => { e.preventDefault(); handleSectionNav('features'); }} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">Features</a>
+          <a href="/#templates" onClick={(e) => { e.preventDefault(); handleSectionNav('templates'); }} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">Templates</a>
           <Link to="/pdf-maker" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">PDF Maker</Link>
           
           {user ? (
@@ -124,7 +138,7 @@ const Footer = () => (
           <span className="text-lg font-bold">Tariani's Resume Builder</span>
         </div>
         <p className="text-gray-400 max-w-sm mb-6">
-          A professional resume builder by Aryan Singh Tariani. Custom ATS-friendly templates, smart content, and instant PDF export.
+          A professional resume &amp; PDF builder by Aryan Singh Tariani. ATS-friendly resume templates, smart content, and a free PDF maker tool — all in one place.
         </p>
         <div className="flex gap-4">
           <a href="https://github.com/Aryan772005" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full glass hover:bg-white/10 hover:text-brand-cyan transition-colors"><Github className="w-5 h-5" /></a>
