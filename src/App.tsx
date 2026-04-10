@@ -5,7 +5,36 @@ import { FileText, Sparkles, Download, Layout as LayoutIcon, Github, Linkedin, M
 import { cn } from './lib/utils';
 import Home from './pages/Home';
 import Builder from './pages/Builder';
+import PdfMaker from './pages/PdfMaker';
 import { useAuth } from './contexts/AuthContext';
+
+const NAVBAR_HEIGHT = 80;
+
+const scrollToSection = (id: string) => {
+  const element = document.getElementById(id);
+  if (element) {
+    const top = element.getBoundingClientRect().top + window.scrollY - NAVBAR_HEIGHT;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+};
+
+const ScrollToTop = () => {
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    // Small timeout ensures DOM is rendered before we scroll
+    const timer = setTimeout(() => {
+      if (hash) {
+        scrollToSection(hash.replace('#', ''));
+      } else {
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+      }
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [pathname, hash]);
+
+  return null;
+};
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -24,7 +53,7 @@ const Navbar = () => {
       isScrolled ? "bg-brand-dark/80 backdrop-blur-md border-b border-brand-border py-3 shadow-[0_4px_30px_rgba(0,0,0,0.1)]" : "bg-transparent"
     )}>
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 group">
+        <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center gap-2 group">
           <div className="w-10 h-10 rounded-xl bg-gradient-premium flex items-center justify-center neon-glow group-hover:scale-110 transition-transform">
             <FileText className="text-white w-6 h-6" />
           </div>
@@ -32,9 +61,9 @@ const Navbar = () => {
         </Link>
         
         <div className="hidden md:flex items-center gap-8">
-          <a href="/#features" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">Features</a>
-          <a href="/#templates" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">Templates</a>
-          <a href="/#pricing" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">Pricing</a>
+          <a href="/#features" onClick={(e) => { e.preventDefault(); scrollToSection('features'); }} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">Features</a>
+          <a href="/#templates" onClick={(e) => { e.preventDefault(); scrollToSection('templates'); }} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">Templates</a>
+          <Link to="/pdf-maker" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">PDF Maker</Link>
           
           {user ? (
             <div className="flex items-center gap-4">
@@ -110,10 +139,10 @@ const Footer = () => (
       <div>
         <h4 className="font-bold mb-6">Product</h4>
         <ul className="space-y-4 text-gray-400 text-sm">
-          <li><a href="#" className="hover:text-brand-cyan transition-colors">Generator</a></li>
+          <li><Link to="/builder" className="hover:text-brand-cyan transition-colors">Resume Builder</Link></li>
+          <li><Link to="/pdf-maker" className="hover:text-brand-cyan transition-colors">PDF Maker</Link></li>
           <li><a href="#" className="hover:text-brand-cyan transition-colors">Templates</a></li>
           <li><a href="#" className="hover:text-brand-cyan transition-colors">ATS Check</a></li>
-          <li><a href="#" className="hover:text-brand-cyan transition-colors">Cover Letter</a></li>
         </ul>
       </div>
       <div>
@@ -167,11 +196,13 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 export default function App() {
   return (
     <Router>
+      <ScrollToTop />
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/pdf-maker" element={<PdfMaker />} />
             <Route path="/builder" element={
               <ProtectedRoute>
                 <Builder />
