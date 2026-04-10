@@ -124,12 +124,12 @@ const Footer = () => (
           <span className="text-lg font-bold">Tariani's Resume Builder</span>
         </div>
         <p className="text-gray-400 max-w-sm mb-6">
-          A personal project by Aryan Singh Tariani. AI-powered resume builder with ATS-friendly templates, smart content generation, and instant PDF export.
+          A professional resume builder by Aryan Singh Tariani. Custom ATS-friendly templates, smart content, and instant PDF export.
         </p>
         <div className="flex gap-4">
-          <a href="#" className="p-2 rounded-full glass hover:bg-white/10 hover:text-brand-cyan transition-colors"><Github className="w-5 h-5" /></a>
-          <a href="#" className="p-2 rounded-full glass hover:bg-white/10 hover:text-brand-cyan transition-colors"><Linkedin className="w-5 h-5" /></a>
-          <a href="#" className="p-2 rounded-full glass hover:bg-white/10 hover:text-brand-cyan transition-colors"><Mail className="w-5 h-5" /></a>
+          <a href="https://github.com/Aryan772005" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full glass hover:bg-white/10 hover:text-brand-cyan transition-colors"><Github className="w-5 h-5" /></a>
+          <a href="https://www.linkedin.com/in/aryan-singh-tariani" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full glass hover:bg-white/10 hover:text-brand-cyan transition-colors"><Linkedin className="w-5 h-5" /></a>
+          <a href="mailto:aryansinghtariani@gmail.com" className="p-2 rounded-full glass hover:bg-white/10 hover:text-brand-cyan transition-colors"><Mail className="w-5 h-5" /></a>
         </div>
       </div>
       <div>

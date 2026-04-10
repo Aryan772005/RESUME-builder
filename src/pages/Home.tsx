@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import {
-  Sparkles, FileText, Zap, Shield, ChevronRight, Lock,
+  FileText, Zap, Shield, ChevronRight, Lock,
   Layout, ChevronDown, Globe, Cpu, Palette,
   Clock, X, Upload, Download
 } from 'lucide-react';
@@ -90,10 +90,10 @@ const FAQItem = ({ question, answer, delay }: any) => {
 /* ─── Page ──────────────────────────────────────────────────────────────── */
 export default function Home() {
   const features = [
-    { icon: Sparkles, title: 'AI Content Generation', description: 'Instantly generate professional summaries and impact-driven bullet points tailored to your exact industry and level.', gradient: 'bg-gradient-to-br from-brand-purple to-brand-blue' },
+    { icon: FileText, title: 'Smart Content Generation', description: 'Instantly generate professional summaries and impact-driven bullet points tailored to your exact industry and level.', gradient: 'bg-gradient-to-br from-brand-purple to-brand-blue' },
     { icon: Zap, title: 'ATS Optimization', description: 'Our templates are engineered to pass Applicant Tracking Systems every time — your resume will always be seen by human eyes.', gradient: 'bg-gradient-to-br from-brand-blue to-brand-cyan' },
-    { icon: FileText, title: 'Premium Templates', description: 'Choose from modern, minimal, and creative templates designed by expert recruiters from top companies.', gradient: 'bg-gradient-to-br from-brand-cyan to-brand-green' },
-    { icon: Cpu, title: 'Resume Score & Analysis', description: 'Get an instant AI-driven score on your resume with 5 actionable suggestions to land more interviews.', gradient: 'bg-gradient-to-br from-brand-green to-brand-cyan' },
+    { icon: Layout, title: 'Premium Templates', description: 'Choose from modern, minimal, and creative templates designed by expert recruiters from top companies.', gradient: 'bg-gradient-to-br from-brand-cyan to-brand-green' },
+    { icon: Cpu, title: 'Resume Score & Analysis', description: 'Get an instant smart score on your resume with 5 actionable suggestions to land more interviews.', gradient: 'bg-gradient-to-br from-brand-green to-brand-cyan' },
     { icon: Palette, title: 'Cover Letter Builder', description: 'Generate a tailored, professional cover letter in seconds — personalized to the job description you paste in.', gradient: 'bg-gradient-to-br from-brand-purple to-brand-cyan' },
     { icon: Clock, title: 'Auto-Save to Cloud', description: 'Your resume is synced in real-time to secure cloud storage. Never lose your work — pick up where you left off on any device.', gradient: 'bg-gradient-to-br from-brand-blue to-brand-purple' },
   ];
@@ -101,10 +101,10 @@ export default function Home() {
   const faqs = [
     { q: 'Is Tariani\'s Resume Builder free to use?', a: 'Yes! You can build and download a resume completely for free. Just sign in with your Google account and start building right away — no credit card needed.', delay: 0.05 },
     { q: 'Are the resumes ATS-compatible?', a: 'Absolutely. Every template is built from the ground up to be fully parsed by modern Applicant Tracking Systems. We avoid complex tables, images in headers, and other elements that trip up ATS software.', delay: 0.1 },
-    { q: 'How does the AI resume generator work?', a: 'Simply describe your professional background in plain English — your experience, skills, education, and target role. Our AI (powered by Google Gemini) will generate a complete, polished resume in seconds, which you can then edit and refine.', delay: 0.15 },
+    { q: 'How does the resume generator work?', a: 'Simply describe your professional background in plain English — your experience, skills, education, and target role. Our smart tool will generate a complete, polished resume in seconds, which you can then edit and refine.', delay: 0.15 },
     { q: 'Can I edit my resume after downloading?', a: 'Yes. Your resume data is saved to your account automatically. Return anytime, make changes, and re-download a fresh PDF.', delay: 0.2 },
     { q: 'What file formats can I export to?', a: 'Currently we support high-quality PDF export — the standard format required by employers worldwide.', delay: 0.25 },
-    { q: 'Is my data private and secure?', a: 'Your resume data is stored securely in your personal Firebase account. It is only accessible to you when signed in. We never share or sell your data.', delay: 0.3 },
+    { q: 'Is my data private and secure?', a: 'Your resume data is stored securely in your personal account. It is only accessible to you when signed in. We never share or sell your data.', delay: 0.3 },
   ];
 
   return (
@@ -145,8 +145,8 @@ export default function Home() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-8"
             style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.12)' }}
           >
-            <Sparkles className="w-4 h-4 text-brand-purple" />
-            <span className="text-xs font-bold uppercase tracking-widest text-brand-purple">AI-Powered Resume Builder</span>
+            <FileText className="w-4 h-4 text-brand-purple" />
+            <span className="text-xs font-bold uppercase tracking-widest text-brand-purple">Professional Resume Builder</span>
           </motion.div>
 
           <motion.h1
@@ -169,8 +169,8 @@ export default function Home() {
             className="text-xl md:text-2xl text-gray-200 max-w-2xl mx-auto mb-12 leading-relaxed font-light"
             style={{ textShadow: '0 2px 20px rgba(0,0,0,0.8)' }}
           >
-            Generate, optimize, and download ATS-friendly resumes instantly with AI.
-            Stand out from thousands of applicants.
+            Create, optimize, and download ATS-friendly resumes instantly.
+            Stand out from thousands of applicants with a professional design.
           </motion.p>
 
           <motion.div
@@ -205,7 +205,7 @@ export default function Home() {
           >
             <div className="flex items-center gap-2 font-bold text-base"><Zap className="w-4 h-4 text-brand-cyan" /> ATS-Ready</div>
             <div className="flex items-center gap-2 font-bold text-base"><Shield className="w-4 h-4 text-brand-purple" /> Privacy First</div>
-            <div className="flex items-center gap-2 font-bold text-base"><Globe className="w-4 h-4 text-brand-blue" /> Google Gemini AI</div>
+            <div className="flex items-center gap-2 font-bold text-base"><Globe className="w-4 h-4 text-brand-blue" /> Industry Standard</div>
             <div className="flex items-center gap-2 font-bold text-base"><FileText className="w-4 h-4 text-brand-green" /> Free PDF Export</div>
           </motion.div>
         </div>
@@ -502,7 +502,7 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {[
-              { icon: Sparkles, title: 'Smart Content', desc: 'Intelligent resume generation that writes polished, impact-focused content — summaries, bullet points, and cover letters crafted for your target role.', color: 'text-brand-purple' },
+              { icon: Cpu, title: 'Smart Content', desc: 'Intelligent resume generation that writes polished, impact-focused content — summaries, bullet points, and cover letters crafted for your target role.', color: 'text-brand-purple' },
               { icon: Shield, title: 'Secure & Private', desc: 'Your data never leaves your account. All connections are encrypted. Zero ads, zero tracking, zero data sharing with anyone.', color: 'text-brand-cyan' },
               { icon: FileText, title: 'Free, Always', desc: 'Every feature — smart generation, PDF export, cloud save, all templates — is completely free. No paywalls, no hidden fees.', color: 'text-brand-green' },
             ].map((card, i) => (
@@ -630,7 +630,7 @@ export default function Home() {
             >
               Frequently Asked <span className="text-gradient">Questions</span>
             </motion.h2>
-            <p className="text-gray-400">Everything you need to know about aryme Resume.</p>
+            <p className="text-gray-400">Everything you need to know about Tariani's Resume Builder.</p>
           </div>
           <div className="space-y-4">
             {faqs.map((faq, i) => (
@@ -652,10 +652,10 @@ export default function Home() {
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-premium" />
           <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-brand-cyan/10 rounded-full blur-3xl" />
           <div className="absolute -top-20 -left-20 w-64 h-64 bg-brand-purple/10 rounded-full blur-3xl" />
-          <Sparkles className="w-10 h-10 text-brand-cyan mx-auto mb-6" />
+          <FileText className="w-10 h-10 text-brand-cyan mx-auto mb-6" />
           <h2 className="text-4xl md:text-5xl font-black mb-6">Ready to land your dream job?</h2>
           <p className="text-gray-400 mb-10 text-lg max-w-xl mx-auto">
-            Join 100,000+ professionals who have accelerated their careers with aryme Resume. It takes less than 5 minutes.
+            Join professionals who have accelerated their careers with Tariani's Resume Builder. It takes less than 5 minutes.
           </p>
           <Link
             to="/builder"

@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Plus, Trash2, Wand2, Download, Layout as LayoutIcon, 
-  ChevronLeft, ChevronRight, Save, Sparkles, 
+  ChevronLeft, ChevronRight, Save, Cpu, 
   User, Briefcase, GraduationCap, Code, Folder, Award,
   Eye, Edit3, Settings, Mail, Phone, MapPin, Linkedin, X, FileText
 } from 'lucide-react';
@@ -298,7 +298,7 @@ Ensure all IDs are unique strings (e.g., "exp-1", "edu-1"). Do not include markd
     const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
     
     pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`${data.personalInfo.fullName || 'Resume'}_aryme_Resume.pdf`);
+    pdf.save(`${data.personalInfo.fullName || 'Resume'}_Resume.pdf`);
   };
 
   return (
@@ -347,13 +347,13 @@ Ensure all IDs are unique strings (e.g., "exp-1", "edu-1"). Do not include markd
             onClick={() => setShowArymeModal(true)}
             className="flex items-center gap-2 px-4 py-2.5 rounded-full glass text-brand-green font-bold text-sm hover:bg-white/10 hover:shadow-[0_0_15px_rgba(57,255,20,0.2)] transition-all"
           >
-            <Sparkles className="w-4 h-4" /> Generate with Aryme
+            <Cpu className="w-4 h-4" /> Smart Generate
           </button>
           <button 
             onClick={() => openAIModal('score')}
             className="flex items-center gap-2 px-4 py-2.5 rounded-full glass text-brand-cyan font-bold text-sm hover:bg-white/10 hover:shadow-[0_0_15px_rgba(34,211,238,0.2)] transition-all"
           >
-            <Sparkles className="w-4 h-4" /> Resume Score
+            <Cpu className="w-4 h-4" /> Resume Score
           </button>
           <button 
             onClick={() => openAIModal('cover-letter')}
@@ -403,7 +403,7 @@ Ensure all IDs are unique strings (e.g., "exp-1", "edu-1"). Do not include markd
                       disabled={isGenerating}
                       className="absolute top-0 right-0 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-brand-cyan hover:text-brand-cyan/80 transition-colors disabled:opacity-50"
                     >
-                      {isGenerating ? 'Generating...' : <><Sparkles className="w-3 h-3" /> Generate</>}
+                      {isGenerating ? 'Generating...' : <><Cpu className="w-3 h-3" /> Generate</>}
                     </button>
                   </div>
                 </section>
@@ -488,7 +488,7 @@ Ensure all IDs are unique strings (e.g., "exp-1", "edu-1"). Do not include markd
                       disabled={isGenerating}
                       className="px-4 py-2 rounded-xl glass text-brand-cyan font-bold text-sm hover:bg-white/10 hover:shadow-[0_0_15px_rgba(34,211,238,0.2)] transition-all flex items-center gap-2"
                     >
-                      <Sparkles className="w-4 h-4" /> Suggest
+                      <Cpu className="w-4 h-4" /> Suggest
                     </button>
                   </div>
                 </section>
@@ -748,8 +748,8 @@ Ensure all IDs are unique strings (e.g., "exp-1", "edu-1"). Do not include markd
               <div className="p-6 md:p-8">
                 <div className="flex items-center justify-between mb-8">
                   <h3 className="text-2xl font-bold flex items-center gap-3">
-                    <Sparkles className="text-brand-green w-6 h-6" />
-                    Aryme Generator
+                    <Cpu className="text-brand-green w-6 h-6" />
+                    Smart Generator
                   </h3>
                   <button onClick={() => setShowArymeModal(false)} className="text-gray-500 hover:text-white transition-colors">
                     <X className="w-6 h-6" />
@@ -801,7 +801,7 @@ Ensure all IDs are unique strings (e.g., "exp-1", "edu-1"). Do not include markd
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-premium" />
               <div className="flex items-center justify-between mb-8">
                 <h3 className="text-2xl font-bold flex items-center gap-3">
-                  <Sparkles className="text-brand-cyan w-6 h-6" />
+                  <Cpu className="text-brand-cyan w-6 h-6" />
                   {aiType === 'score' ? 'Resume Analysis' : 
                    aiType === 'cover-letter' ? 'Generate Cover Letter' : 
                    'Enhancement'}
