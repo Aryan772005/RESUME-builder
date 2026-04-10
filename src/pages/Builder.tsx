@@ -831,7 +831,19 @@ Ensure all IDs are unique strings (e.g., "exp-1", "edu-1"). Do not include markd
                   <button
                     onClick={async () => {
                       const res = await handleAIAction(aiType, data, targetRole);
-                      setAiResult(res || true); // handleAIAction returns result for some types
+                      
+                      if (aiType === 'score' && res) {
+                        try {
+                           const cleanJson = res.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+                           const parsed = JSON.parse(cleanJson);
+                           setAiResult(parsed);
+                        } catch (e) {
+                           console.error("Failed to parse score", e);
+                           setAiResult({ score: 0, tips: ["Failed to analyze resume properly. Try again."] });
+                        }
+                      } else {
+                        setAiResult(res || true);
+                      }
                     }}
                     disabled={isGenerating}
                     className="w-full py-4 rounded-xl bg-gradient-premium neon-glow-hover text-white font-bold transition-all flex items-center justify-center gap-2"
@@ -843,24 +855,22 @@ Ensure all IDs are unique strings (e.g., "exp-1", "edu-1"). Do not include markd
                     {aiType === 'score' ? (
                       <div className="space-y-4">
                         <div className="text-center">
-                          <div className="text-6xl font-black text-gradient mb-2">85/100</div>
-                          <p className="text-gray-400">Your resume is looking strong!</p>
+                          <div className="text-6xl font-black text-gradient mb-2">{aiResult?.score || 0}/100</div>
+                          <p className="text-gray-400">
+                            {(aiResult?.score || 0) >= 80 ? "Your resume is looking strong!" : 
+                             (aiResult?.score || 0) >= 60 ? "Good start, but needs improvement." : 
+                             "Needs significant work before applying."}
+                          </p>
                         </div>
                         <div className="space-y-3">
                           <p className="font-bold text-sm uppercase tracking-widest text-gray-500">Actionable Tips:</p>
                           <ul className="space-y-2">
-                            <li className="flex items-start gap-2 text-sm text-gray-300">
-                              <ChevronRight className="w-4 h-4 text-brand-purple mt-0.5" />
-                              Add more quantifiable achievements in your experience section.
-                            </li>
-                            <li className="flex items-start gap-2 text-sm text-gray-300">
-                              <ChevronRight className="w-4 h-4 text-brand-purple mt-0.5" />
-                              Include specific technologies mentioned in the job description.
-                            </li>
-                            <li className="flex items-start gap-2 text-sm text-gray-300">
-                              <ChevronRight className="w-4 h-4 text-brand-purple mt-0.5" />
-                              Strengthen your professional summary with a clear value proposition.
-                            </li>
+                            {(aiResult?.tips || []).map((tip: string, i: number) => (
+                              <li key={i} className="flex items-start gap-2 text-sm text-gray-300">
+                                <ChevronRight className="w-4 h-4 text-brand-purple mt-0.5 shrink-0" />
+                                <span>{tip}</span>
+                              </li>
+                            ))}
                           </ul>
                         </div>
                       </div>
