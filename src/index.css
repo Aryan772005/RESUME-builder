@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-purple: #8b5cf6;
+  --color-brand-blue: #3b82f6;
+  --color-brand-cyan: #22d3ee;
+  --color-brand-green: #39ff14;
+  --color-brand-dark: #0B0F1A;
+  --color-brand-secondary: #111827;
+  --color-brand-glass: rgba(255, 255, 255, 0.05);
+  --color-brand-border: rgba(255, 255, 255, 0.1);
+  
+  /* Legacy hex colors for html2canvas compatibility */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-brand-dark text-white antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+@utility glass {
+  background-color: var(--color-brand-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-brand-border);
+}
+
+@utility glass-card {
+  @apply glass rounded-2xl shadow-2xl transition-all duration-300;
+}
+
+@utility glass-card-hover {
+  @apply hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(34,211,238,0.15)] hover:border-brand-cyan/30;
+}
+
+@utility text-gradient {
+  background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(135deg, var(--color-brand-green), var(--color-brand-cyan));
+}
+
+@utility bg-gradient-premium {
+  background-image: linear-gradient(135deg, var(--color-brand-green), var(--color-brand-cyan));
+}
+
+@utility bg-gradient-brand {
+  background-image: linear-gradient(to bottom right, color-mix(in srgb, var(--color-brand-green) 15%, transparent), color-mix(in srgb, var(--color-brand-cyan) 15%, transparent), transparent);
+}
+
+@utility neon-glow {
+  box-shadow: 0 0 15px rgba(57, 255, 20, 0.4), 0 0 30px rgba(34, 211, 238, 0.2);
+}
+
+@layer components {
+  .neon-glow-hover {
+    transition: all 0.3s ease;
+  }
+  .neon-glow-hover:hover {
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.6), 0 0 40px rgba(34, 211, 238, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .input-glow {
+    transition: all 0.3s ease;
+  }
+  .input-glow:focus {
+    box-shadow: 0 0 0 2px rgba(57, 255, 20, 0.2), 0 0 15px rgba(57, 255, 20, 0.15);
+    border-color: var(--color-brand-green);
+  }
+}
+
+/* Animations */
+@keyframes gradient-xy {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+@utility animate-gradient-xy {
+  animation: gradient-xy 15s ease infinite;
+  background-size: 400% 400%;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-brand-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-secondary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-purple);
+}
