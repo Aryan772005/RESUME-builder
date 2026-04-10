@@ -10,9 +10,36 @@ import { cn } from '../lib/utils';
 import { ResumeData, Experience, Education, Project, Certification, TemplateType } from '../types';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI } from "@google/genai"; // kept for type compat — replaced at runtime
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
+
+/* ── NVIDIA NIM helper (OpenAI-compatible) ─────────────────────────────── */
+const NVIDIA_API = 'https://integrate.api.nvidia.com/v1/chat/completions';
+const NVIDIA_KEY = process.env.VITE_NVIDIA_API_KEY as string;
+const NVIDIA_MODEL = 'meta/llama-3.3-70b-instruct';
+
+async function askNvidia(prompt: string): Promise<string> {
+  const res = await fetch(NVIDIA_API, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${NVIDIA_KEY}`,
+    },
+    body: JSON.stringify({
+      model: NVIDIA_MODEL,
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.6,
+      max_tokens: 2048,
+    }),
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`NVIDIA API error ${res.status}: ${err}`);
+  }
+  const json = await res.json();
+  return (json.choices?.[0]?.message?.content ?? '').trim();
+}
 import { useAuth } from '../contexts/AuthContext';
 
 // --- Components ---
@@ -208,35 +235,29 @@ export default function Builder() {
   const handleAIAction = async (type: string, content: any, context?: string) => {
     setIsGenerating(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
-      
-      let prompt = "";
-      if (type === "summary") {
-        prompt = `Generate a professional, high-impact resume summary for a person with the following details: ${JSON.stringify(content)}. Keep it concise (3-4 sentences) and ATS-friendly.`;
-      } else if (type === "skills") {
-        prompt = `Suggest 5-8 relevant technical and soft skills for a professional with this background: ${JSON.stringify(content)}. Return only a comma-separated list.`;
-      } else if (type === "cover-letter") {
+      let prompt = '';
+      if (type === 'summary') {
+        prompt = `Generate a professional, high-impact resume summary for a person with the following details: ${JSON.stringify(content)}. Keep it concise (3-4 sentences) and ATS-friendly. Return only the summary text, no labels.`;
+      } else if (type === 'skills') {
+        prompt = `Suggest 5-8 relevant technical and soft skills for a professional with this background: ${JSON.stringify(content)}. Return only a comma-separated list, nothing else.`;
+      } else if (type === 'cover-letter') {
         prompt = `Write a professional cover letter based on this resume data: ${JSON.stringify(content)}. Target role: ${context}. Keep it modern, persuasive, and professional.`;
-      } else if (type === "score") {
-        prompt = `Analyze this resume data and provide a score out of 100 based on ATS friendliness, content quality, and professional impact. Also provide 3 actionable tips for improvement. Data: ${JSON.stringify(content)}. Return as JSON: { "score": number, "tips": string[] }`;
+      } else if (type === 'score') {
+        prompt = `Analyze this resume data and provide a score out of 100 based on ATS friendliness, content quality, and professional impact. Also provide 3 actionable tips for improvement. Data: ${JSON.stringify(content)}. Return ONLY valid JSON like: {"score": number, "tips": string[]}. No markdown, no explanation.`;
       }
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: prompt,
-      });
-      
-      const resultText = response.text;
-      
+      const resultText = await askNvidia(prompt);
+
       if (type === 'summary') {
-        handlePersonalInfoChange('summary', resultText || "");
+        handlePersonalInfoChange('summary', resultText);
       } else if (type === 'skills') {
-        const skills = (resultText || "").split(',').map((s: string) => s.trim());
+        const skills = resultText.split(',').map((s: string) => s.trim()).filter(Boolean);
         setData(prev => ({ ...prev, skills: [...new Set([...prev.skills, ...skills])] }));
       }
       return resultText;
     } catch (error) {
-      console.error("AI Enhancement failed", error);
+      console.error('AI Enhancement failed', error);
+      alert('AI request failed. Check your API key or network.');
     } finally {
       setIsGenerating(false);
     }
@@ -246,7 +267,6 @@ export default function Builder() {
     if (!arymePrompt.trim()) return;
     setIsArymeGenerating(true);
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
       const prompt = `You are an expert resume writer. Generate a complete, professional resume based on the following description:
 "${arymePrompt}"
 
@@ -260,23 +280,19 @@ interface ResumeData {
   certifications: { id: string; name: string; issuer: string; date: string; }[];
 }
 
-Ensure all IDs are unique strings (e.g., "exp-1", "edu-1"). Do not include markdown formatting like \`\`\`json. Return only the raw JSON string.`;
+Ensure all IDs are unique strings (e.g., "exp-1", "edu-1"). Do not include markdown formatting or code fences. Return only the raw JSON string.`;
 
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: prompt,
-      });
-
-      let jsonString = response.text || "{}";
+      let jsonString = await askNvidia(prompt);
+      // Strip any accidental markdown fences
       jsonString = jsonString.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-      
+
       const generatedData = JSON.parse(jsonString) as ResumeData;
       setData(generatedData);
       setShowArymeModal(false);
       setArymePrompt('');
     } catch (error) {
-      console.error("Aryme generation failed", error);
-      alert("Failed to generate resume. Please try again.");
+      console.error('Smart Generate failed', error);
+      alert('Failed to generate resume. Please try again or check your connection.');
     } finally {
       setIsArymeGenerating(false);
     }
