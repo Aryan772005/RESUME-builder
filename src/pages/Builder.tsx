@@ -14,31 +14,21 @@ import { GoogleGenAI } from "@google/genai"; // kept for type compat — replace
 import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
 
-/* ── NVIDIA NIM helper (OpenAI-compatible) ─────────────────────────────── */
-const NVIDIA_API = 'https://integrate.api.nvidia.com/v1/chat/completions';
-const NVIDIA_KEY = process.env.VITE_NVIDIA_API_KEY as string;
-const NVIDIA_MODEL = 'meta/llama-3.3-70b-instruct';
-
+/* ── AI proxy helper ───────────────────────────────────────────────── */
+/** Calls our own /api/ai serverless proxy (avoids CORS & keeps key server-side) */
 async function askNvidia(prompt: string): Promise<string> {
-  const res = await fetch(NVIDIA_API, {
+  const res = await fetch('/api/ai', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${NVIDIA_KEY}`,
-    },
-    body: JSON.stringify({
-      model: NVIDIA_MODEL,
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0.6,
-      max_tokens: 2048,
-    }),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt }),
   });
   if (!res.ok) {
     const err = await res.text();
-    throw new Error(`NVIDIA API error ${res.status}: ${err}`);
+    throw new Error(`AI proxy error ${res.status}: ${err}`);
   }
   const json = await res.json();
-  return (json.choices?.[0]?.message?.content ?? '').trim();
+  if (json.error) throw new Error(json.error);
+  return (json.text ?? '').trim();
 }
 import { useAuth } from '../contexts/AuthContext';
 
