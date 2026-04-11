@@ -63,6 +63,7 @@ const MouseGlow = () => {
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signIn, signOut } = useAuth();
@@ -78,6 +79,7 @@ const Navbar = () => {
 
   const handleSectionNav = (sectionId: string) => {
     setActiveNav(sectionId);
+    setMobileMenuOpen(false);
     if (location.pathname === '/') {
       // Already on home — just scroll
       scrollToSection(sectionId);
@@ -96,70 +98,138 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className={cn(
-      "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4",
-      isScrolled ? "bg-transparent border-b border-white/10 py-3 shadow-[0_4px_30px_rgba(34,211,238,0.15)]" : "bg-transparent"
-    )}>
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <Link to="/" onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); setActiveNav(''); }} className="group">
-          <LogoWordmark iconSize={36} />
-        </Link>
-        
-        <div className="hidden md:flex items-center gap-8">
-          <a href="/#features" onClick={(e) => { e.preventDefault(); handleSectionNav('features'); }} className={cn("text-sm font-medium transition-colors cursor-pointer", activeNav === 'features' ? "text-brand-cyan" : "text-gray-400 hover:text-white")}>Features</a>
-          <a href="/#templates" onClick={(e) => { e.preventDefault(); handleSectionNav('templates'); }} className={cn("text-sm font-medium transition-colors cursor-pointer", activeNav === 'templates' ? "text-brand-cyan" : "text-gray-400 hover:text-white")}>Templates</a>
-          <Link to="/builder" onClick={() => setActiveNav('builder')} className={cn("text-sm font-medium transition-colors cursor-pointer", activeNav === 'builder' ? "text-brand-cyan" : "text-gray-400 hover:text-white")}>Resume Builder</Link>
-          <Link to="/pdf-maker" onClick={() => setActiveNav('pdf-maker')} className={cn("text-sm font-medium transition-colors cursor-pointer", activeNav === 'pdf-maker' ? "text-brand-cyan" : "text-gray-400 hover:text-white")}>JPG to PDF Maker</Link>
+    <>
+      <nav className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4",
+        isScrolled || mobileMenuOpen ? "bg-brand-dark/80 backdrop-blur-md border-b border-white/10 py-3 shadow-[0_4px_30px_rgba(34,211,238,0.15)]" : "bg-transparent"
+      )}>
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <Link to="/" onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); setActiveNav(''); setMobileMenuOpen(false); }} className="group">
+            <LogoWordmark iconSize={36} />
+          </Link>
           
-          {user ? (
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                {user.photoURL ? (
-                  <img src={user.photoURL} alt="Profile" className="w-8 h-8 rounded-full border border-brand-border" referrerPolicy="no-referrer" />
-                ) : (
-                  <div className="w-8 h-8 rounded-full bg-brand-secondary border border-brand-border flex items-center justify-center text-xs font-bold">
-                    {user.email?.charAt(0).toUpperCase()}
-                  </div>
-                )}
-                <span className="text-sm font-medium text-gray-300 hidden lg:block">{user.displayName || user.email}</span>
+          <div className="hidden md:flex items-center gap-8">
+            <a href="/#features" onClick={(e) => { e.preventDefault(); handleSectionNav('features'); }} className={cn("text-sm font-medium transition-colors cursor-pointer", activeNav === 'features' ? "text-brand-cyan" : "text-gray-400 hover:text-white")}>Features</a>
+            <a href="/#templates" onClick={(e) => { e.preventDefault(); handleSectionNav('templates'); }} className={cn("text-sm font-medium transition-colors cursor-pointer", activeNav === 'templates' ? "text-brand-cyan" : "text-gray-400 hover:text-white")}>Templates</a>
+            <Link to="/builder" onClick={() => setActiveNav('builder')} className={cn("text-sm font-medium transition-colors cursor-pointer", activeNav === 'builder' ? "text-brand-cyan" : "text-gray-400 hover:text-white")}>Resume Builder</Link>
+            <Link to="/pdf-maker" onClick={() => setActiveNav('pdf-maker')} className={cn("text-sm font-medium transition-colors cursor-pointer", activeNav === 'pdf-maker' ? "text-brand-cyan" : "text-gray-400 hover:text-white")}>JPG to PDF Maker</Link>
+            
+            {user ? (
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  {user.photoURL ? (
+                    <img src={user.photoURL} alt="Profile" className="w-8 h-8 rounded-full border border-brand-border" referrerPolicy="no-referrer" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-brand-secondary border border-brand-border flex items-center justify-center text-xs font-bold">
+                      {user.email?.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <span className="text-sm font-medium text-gray-300 hidden lg:block">{user.displayName || user.email}</span>
+                </div>
+                <button 
+                  onClick={signOut}
+                  className="p-2 rounded-full glass hover:bg-white/10 hover:text-red-400 transition-colors"
+                  title="Sign Out"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+                <Link 
+                  to="/builder" 
+                  className="px-5 py-2.5 rounded-full bg-gradient-premium neon-glow-hover text-white text-sm font-semibold transition-all shadow-[0_0_15px_rgba(34,211,238,0.2)]"
+                >
+                  Go to Builder
+                </Link>
               </div>
-              <button 
-                onClick={signOut}
-                className="p-2 rounded-full glass hover:bg-white/10 hover:text-red-400 transition-colors"
-                title="Sign Out"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
-              <Link 
-                to="/builder" 
-                className="px-5 py-2.5 rounded-full bg-gradient-premium neon-glow-hover text-white text-sm font-semibold transition-all shadow-[0_0_15px_rgba(34,211,238,0.2)]"
-              >
-                Go to Builder
-              </Link>
-            </div>
-          ) : (
-            <div className="flex items-center gap-4">
-              <button 
-                onClick={signIn}
-                className="flex items-center gap-2 text-sm font-medium text-gray-300 hover:text-white transition-colors"
-              >
-                <LogIn className="w-4 h-4" /> Sign In
-              </button>
-              <button 
-                onClick={signIn}
-                className="px-5 py-2.5 rounded-full bg-gradient-premium neon-glow-hover text-white text-sm font-semibold transition-all shadow-[0_0_15px_rgba(34,211,238,0.2)]"
-              >
-                Get Started
-              </button>
-            </div>
-          )}
-        </div>
+            ) : (
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={signIn}
+                  className="flex items-center gap-2 text-sm font-medium text-gray-300 hover:text-white transition-colors"
+                >
+                  <LogIn className="w-4 h-4" /> Sign In
+                </button>
+                <button 
+                  onClick={signIn}
+                  className="px-5 py-2.5 rounded-full bg-gradient-premium neon-glow-hover text-white text-sm font-semibold transition-all shadow-[0_0_15px_rgba(34,211,238,0.2)]"
+                >
+                  Get Started
+                </button>
+              </div>
+            )}
+          </div>
 
-        <button className="md:hidden text-white">
-          <Menu className="w-6 h-6" />
-        </button>
-      </div>
-    </nav>
+          <button className="md:hidden text-white p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="fixed top-[72px] left-0 right-0 z-40 bg-brand-dark/95 backdrop-blur-md border-b border-white/10 md:hidden overflow-hidden"
+          >
+            <div className="px-6 py-8 flex flex-col gap-6">
+              <a href="/#features" onClick={(e) => { e.preventDefault(); handleSectionNav('features'); }} className={cn("text-lg font-bold transition-colors", activeNav === 'features' ? "text-brand-cyan" : "text-gray-300 hover:text-white")}>Features</a>
+              <a href="/#templates" onClick={(e) => { e.preventDefault(); handleSectionNav('templates'); }} className={cn("text-lg font-bold transition-colors", activeNav === 'templates' ? "text-brand-cyan" : "text-gray-300 hover:text-white")}>Templates</a>
+              <Link to="/builder" onClick={() => { setActiveNav('builder'); setMobileMenuOpen(false); }} className={cn("text-lg font-bold transition-colors", activeNav === 'builder' ? "text-brand-cyan" : "text-gray-300 hover:text-white")}>Resume Builder</Link>
+              <Link to="/pdf-maker" onClick={() => { setActiveNav('pdf-maker'); setMobileMenuOpen(false); }} className={cn("text-lg font-bold transition-colors", activeNav === 'pdf-maker' ? "text-brand-cyan" : "text-gray-300 hover:text-white")}>JPG to PDF Maker</Link>
+              
+              <div className="h-px bg-white/10 w-full my-2"></div>
+              
+              {user ? (
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-center gap-3">
+                    {user.photoURL ? (
+                      <img src={user.photoURL} alt="Profile" className="w-10 h-10 rounded-full border border-brand-border" referrerPolicy="no-referrer" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-brand-secondary border border-brand-border flex items-center justify-center text-sm font-bold">
+                        {user.email?.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                    <span className="text-base font-medium text-white">{user.displayName || user.email}</span>
+                  </div>
+                  <div className="flex gap-4 w-full">
+                    <Link 
+                      to="/builder" 
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex-1 py-3 rounded-xl bg-gradient-premium neon-glow-hover text-white text-center text-sm font-bold transition-all shadow-[0_0_15px_rgba(34,211,238,0.2)]"
+                    >
+                      Go to Builder
+                    </Link>
+                    <button 
+                      onClick={() => { signOut(); setMobileMenuOpen(false); }}
+                      className="p-3 rounded-xl glass hover:bg-white/10 text-red-400 transition-colors flex items-center justify-center border border-red-500/20"
+                    >
+                      <LogOut className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  <button 
+                    onClick={() => { signIn(); setMobileMenuOpen(false); }}
+                    className="w-full py-3 rounded-xl glass text-white text-sm font-bold transition-all border border-brand-border"
+                  >
+                    Sign In
+                  </button>
+                  <button 
+                    onClick={() => { signIn(); setMobileMenuOpen(false); }}
+                    className="w-full py-3 rounded-xl bg-gradient-premium neon-glow-hover text-white text-sm font-bold transition-all shadow-[0_0_15px_rgba(34,211,238,0.2)]"
+                  >
+                    Get Started
+                  </button>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
