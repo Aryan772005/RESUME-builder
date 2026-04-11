@@ -540,6 +540,7 @@ export default function Builder() {
   const [aiType, setAiType] = useState<string>('');
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   const [template, setTemplate] = useState<TemplateType>('modern');
+  const [useSampleData, setUseSampleData] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
   const [targetRole, setTargetRole] = useState('');
@@ -1033,102 +1034,70 @@ Ensure all IDs are unique strings (e.g., "exp-1", "edu-1"). Do not include markd
               >
                 <section>
                   <SectionHeader icon={LayoutIcon} title="Choose Template" />
+
+                  {/* Sample Data Toggle */}
+                  <div className="flex items-center justify-between glass-card p-4 rounded-xl mb-6">
+                    <div>
+                      <h4 className="font-bold text-white text-sm">Use Sample Data</h4>
+                      <p className="text-[11px] text-gray-400 mt-0.5">Shows demo content in preview so you can see the template design</p>
+                    </div>
+                    <button
+                      onClick={() => setUseSampleData(!useSampleData)}
+                      className={cn(
+                        "w-12 h-6 rounded-full relative transition-all duration-300",
+                        useSampleData ? "bg-brand-cyan" : "bg-gray-600"
+                      )}
+                    >
+                      <span className={cn(
+                        "absolute top-0.5 w-5 h-5 bg-white rounded-full transition-all duration-300 shadow-md",
+                        useSampleData ? "left-6" : "left-0.5"
+                      )} />
+                    </button>
+                  </div>
+
+                  {/* Template Cards - Real Live Mini Previews */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
 
                     {/* Minimal Template Card */}
-                    <button onClick={() => setTemplate('minimal')} className={cn("glass-card p-4 text-left transition-all border-2 rounded-xl overflow-hidden group", template === 'minimal' ? "border-brand-cyan shadow-[0_0_20px_rgba(34,211,238,0.2)]" : "border-transparent hover:border-brand-border")}>
-                      <div className="w-full aspect-[3/4] bg-white rounded-lg mb-3 overflow-hidden relative shadow-md">
-                        {/* Thumbnail: Minimal - Centered Header */}
-                        <div className="absolute inset-0 p-3 flex flex-col gap-1.5">
-                          <div className="w-full border-b-2 border-gray-800 pb-1.5 mb-1 text-center">
-                            <div className="h-2 w-2/3 bg-gray-900 rounded mx-auto mb-1"></div>
-                            <div className="flex justify-center gap-1"><div className="h-1 w-8 bg-gray-300 rounded"></div><div className="h-1 w-8 bg-gray-300 rounded"></div></div>
-                          </div>
-                          <div className="h-1 w-1/2 bg-gray-200 rounded mb-0.5"></div>
-                          <div className="h-1 w-full bg-gray-100 rounded"></div>
-                          <div className="h-1 w-5/6 bg-gray-100 rounded"></div>
-                          <div className="h-1 w-1/3 bg-gray-200 rounded mt-1 mb-0.5"></div>
-                          <div className="h-1 w-full bg-gray-100 rounded"></div>
-                          <div className="h-1 w-4/5 bg-gray-100 rounded"></div>
-                          <div className="flex gap-1 mt-1">
-                            <div className="flex-1"><div className="h-1 w-1/2 bg-gray-200 rounded mb-1"></div><div className="h-1 w-full bg-gray-100 rounded"></div><div className="h-1 w-3/4 bg-gray-100 rounded mt-0.5"></div></div>
-                            <div className="flex-1"><div className="h-1 w-1/2 bg-gray-200 rounded mb-1"></div><div className="h-1 w-full bg-gray-100 rounded"></div><div className="h-1 w-3/4 bg-gray-100 rounded mt-0.5"></div></div>
-                          </div>
+                    <button onClick={() => setTemplate('minimal')} className={cn("glass-card p-3 text-left transition-all border-2 rounded-xl overflow-hidden group", template === 'minimal' ? "border-brand-cyan shadow-[0_0_20px_rgba(34,211,238,0.2)]" : "border-transparent hover:border-brand-border")}>
+                      <div className="w-full aspect-[3/4] rounded-lg mb-3 overflow-hidden relative shadow-md">
+                        <div className="absolute inset-0 transform scale-[0.22] origin-top-left" style={{ width: '454%', height: '454%' }}>
+                          <MinimalTemplate data={DEMO_DATA} />
                         </div>
                       </div>
-                      <h4 className="font-bold text-white text-sm">Minimal</h4>
-                      <p className="text-[11px] text-gray-400 mt-0.5">Clean serif, centered header</p>
+                      <div className="flex items-center gap-2">
+                        <div className={cn("w-3 h-3 rounded-full border-2", template === 'minimal' ? "border-brand-cyan bg-brand-cyan" : "border-gray-500")} />
+                        <h4 className="font-bold text-white text-sm">Minimal</h4>
+                      </div>
+                      <p className="text-[11px] text-gray-400 mt-0.5 ml-5">Clean serif, centered header</p>
                     </button>
 
                     {/* Modern Template Card */}
-                    <button onClick={() => setTemplate('modern')} className={cn("glass-card p-4 text-left transition-all border-2 rounded-xl overflow-hidden group", template === 'modern' ? "border-brand-cyan shadow-[0_0_20px_rgba(34,211,238,0.2)]" : "border-transparent hover:border-brand-border")}>
-                      <div className="w-full aspect-[3/4] rounded-lg mb-3 overflow-hidden relative shadow-md flex">
-                        {/* Thumbnail: Modern - Navy sidebar + white right */}
-                        <div className="w-[35%] bg-[#1e3a5f] flex flex-col items-center pt-2 gap-1.5 px-1.5">
-                          <div className="w-8 h-8 rounded-full bg-[#152945] border border-white/20 mb-1"></div>
-                          <div className="h-1 w-full bg-white/20 rounded"></div>
-                          <div className="h-1 w-4/5 bg-white/10 rounded"></div>
-                          <div className="h-1 w-4/5 bg-white/10 rounded"></div>
-                          <div className="h-px w-full bg-white/10 my-0.5"></div>
-                          <div className="h-1 w-full bg-white/20 rounded"></div>
-                          <div className="h-1 w-4/5 bg-white/10 rounded"></div>
-                          <div className="h-1 w-4/5 bg-white/10 rounded"></div>
-                        </div>
-                        <div className="flex-1 bg-white p-2 flex flex-col gap-1.5">
-                          <div className="h-2.5 w-4/5 bg-gray-900 rounded"></div>
-                          <div className="h-px w-full bg-gray-200 my-0.5"></div>
-                          <div className="h-1 w-1/3 bg-gray-200 rounded mb-0.5"></div>
-                          <div className="pl-2 border-l-2 border-gray-200 flex flex-col gap-0.5">
-                            <div className="h-1 w-3/4 bg-gray-800 rounded"></div>
-                            <div className="h-1 w-2/3 bg-[#1e3a5f]/40 rounded"></div>
-                            <div className="h-1 w-full bg-gray-100 rounded"></div>
-                          </div>
-                          <div className="h-1 w-1/3 bg-gray-200 rounded mt-1 mb-0.5"></div>
-                          <div className="pl-2 border-l-2 border-gray-200 flex flex-col gap-0.5">
-                            <div className="h-1 w-3/4 bg-gray-800 rounded"></div>
-                            <div className="h-1 w-full bg-gray-100 rounded"></div>
-                          </div>
+                    <button onClick={() => setTemplate('modern')} className={cn("glass-card p-3 text-left transition-all border-2 rounded-xl overflow-hidden group", template === 'modern' ? "border-brand-cyan shadow-[0_0_20px_rgba(34,211,238,0.2)]" : "border-transparent hover:border-brand-border")}>
+                      <div className="w-full aspect-[3/4] rounded-lg mb-3 overflow-hidden relative shadow-md">
+                        <div className="absolute inset-0 transform scale-[0.22] origin-top-left" style={{ width: '454%', height: '454%' }}>
+                          <ModernTemplate data={DEMO_DATA} />
                         </div>
                       </div>
-                      <h4 className="font-bold text-white text-sm">Modern</h4>
-                      <p className="text-[11px] text-gray-400 mt-0.5">Navy sidebar, photo placeholder</p>
+                      <div className="flex items-center gap-2">
+                        <div className={cn("w-3 h-3 rounded-full border-2", template === 'modern' ? "border-brand-cyan bg-brand-cyan" : "border-gray-500")} />
+                        <h4 className="font-bold text-white text-sm">Modern</h4>
+                      </div>
+                      <p className="text-[11px] text-gray-400 mt-0.5 ml-5">Navy sidebar, photo placeholder</p>
                     </button>
 
                     {/* Creative Template Card */}
-                    <button onClick={() => setTemplate('creative')} className={cn("glass-card p-4 text-left transition-all border-2 rounded-xl overflow-hidden group", template === 'creative' ? "border-brand-cyan shadow-[0_0_20px_rgba(34,211,238,0.2)]" : "border-transparent hover:border-brand-border")}>
-                      <div className="w-full aspect-[3/4] rounded-lg mb-3 overflow-hidden relative shadow-md flex">
-                        {/* Thumbnail: Creative - Dark left + yellow right */}
-                        <div className="w-[38%] bg-[#1a1a1a] flex flex-col">
-                          <div className="w-full aspect-square bg-[#2a2a2a] border-b-2 border-gray-900 flex items-center justify-center"><div className="w-6 h-6 rounded-full bg-gray-700"></div></div>
-                          <div className="p-1.5 flex flex-col gap-2">
-                            <div className="border-l-2 border-yellow-400 pl-1"><div className="h-1 w-full bg-white/20 rounded"></div></div>
-                            <div className="h-1 w-full bg-white/10 rounded"></div>
-                            <div className="h-1 w-4/5 bg-white/10 rounded"></div>
-                            <div className="border-l-2 border-yellow-400 pl-1 mt-1"><div className="h-1 w-full bg-white/20 rounded"></div></div>
-                            <div className="flex flex-col gap-1">
-                              <div><div className="h-1 w-full bg-gray-600 rounded mb-0.5"></div><div className="h-0.5 w-4/5 bg-yellow-400/60 rounded"></div></div>
-                              <div><div className="h-1 w-full bg-gray-600 rounded mb-0.5"></div><div className="h-0.5 w-3/5 bg-yellow-400/60 rounded"></div></div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex-1 bg-[#fafafa] p-2 flex flex-col gap-1.5">
-                          <div className="relative mb-1">
-                            <div className="h-2.5 w-4/5 bg-gray-900 rounded relative z-10"></div>
-                            <div className="absolute bottom-0 left-0 w-3/5 h-1.5 bg-yellow-400 opacity-70"></div>
-                          </div>
-                          <div className="flex flex-col gap-0.5 border-l-2 border-dotted border-gray-300 pl-1.5 mb-1">
-                            <div className="h-1 w-4/5 bg-gray-300 rounded"></div>
-                            <div className="h-1 w-3/5 bg-gray-300 rounded"></div>
-                          </div>
-                          <div className="h-px w-full bg-gray-200 my-0.5"></div>
-                          <div className="h-1 w-1/3 bg-gray-300 rounded mb-0.5"></div>
-                          <div className="h-1 w-1/2 bg-yellow-400/50 rounded"></div>
-                          <div className="h-1 w-full bg-gray-100 rounded"></div>
-                          <div className="h-1 w-4/5 bg-gray-100 rounded"></div>
+                    <button onClick={() => setTemplate('creative')} className={cn("glass-card p-3 text-left transition-all border-2 rounded-xl overflow-hidden group", template === 'creative' ? "border-brand-cyan shadow-[0_0_20px_rgba(34,211,238,0.2)]" : "border-transparent hover:border-brand-border")}>
+                      <div className="w-full aspect-[3/4] rounded-lg mb-3 overflow-hidden relative shadow-md">
+                        <div className="absolute inset-0 transform scale-[0.22] origin-top-left" style={{ width: '454%', height: '454%' }}>
+                          <CreativeTemplate data={DEMO_DATA} />
                         </div>
                       </div>
-                      <h4 className="font-bold text-white text-sm">Creative</h4>
-                      <p className="text-[11px] text-gray-400 mt-0.5">Dark sidebar, yellow accents</p>
+                      <div className="flex items-center gap-2">
+                        <div className={cn("w-3 h-3 rounded-full border-2", template === 'creative' ? "border-brand-cyan bg-brand-cyan" : "border-gray-500")} />
+                        <h4 className="font-bold text-white text-sm">Creative</h4>
+                      </div>
+                      <p className="text-[11px] text-gray-400 mt-0.5 ml-5">Dark sidebar, yellow accents</p>
                     </button>
 
                   </div>
@@ -1149,9 +1118,9 @@ Ensure all IDs are unique strings (e.g., "exp-1", "edu-1"). Do not include markd
               className="origin-top transition-all duration-500 overflow-hidden bg-white"
               style={{ boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}
             >
-              {template === 'minimal' && <MinimalTemplate data={mergeWithDemo(data)} />}
-              {template === 'modern' && <ModernTemplate data={mergeWithDemo(data)} />}
-              {template === 'creative' && <CreativeTemplate data={mergeWithDemo(data)} />}
+              {template === 'minimal' && <MinimalTemplate data={useSampleData ? mergeWithDemo(data) : data} />}
+              {template === 'modern' && <ModernTemplate data={useSampleData ? mergeWithDemo(data) : data} />}
+              {template === 'creative' && <CreativeTemplate data={useSampleData ? mergeWithDemo(data) : data} />}
             </div>
           </div>
         </div>
