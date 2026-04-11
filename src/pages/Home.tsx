@@ -407,7 +407,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold capitalize text-center mb-1">Minimal</h3>
               <p className="text-xs text-gray-500 text-center">Clean, elegant, and timeless. Perfect for finance, consulting, and law.</p>
-              <Link to="/builder" className="mt-4 block w-full py-2.5 rounded-full text-center text-sm font-bold glass hover:bg-white/10 hover:text-brand-cyan transition-all">
+              <Link to="/builder?template=minimal" className="mt-4 block w-full py-2.5 rounded-full text-center text-sm font-bold glass hover:bg-white/10 hover:text-brand-cyan transition-all">
                 Use This Template
               </Link>
             </motion.div>
@@ -461,7 +461,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold capitalize text-center mb-1">Modern</h3>
               <p className="text-xs text-gray-500 text-center">Bold and structured with a strong visual hierarchy. Great for tech roles.</p>
-              <Link to="/builder" className="mt-4 block w-full py-2.5 rounded-full text-center text-sm font-bold glass hover:bg-white/10 hover:text-brand-cyan transition-all">
+              <Link to="/builder?template=modern" className="mt-4 block w-full py-2.5 rounded-full text-center text-sm font-bold glass hover:bg-white/10 hover:text-brand-cyan transition-all">
                 Use This Template
               </Link>
             </motion.div>
@@ -523,7 +523,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold capitalize text-center mb-1">Creative</h3>
               <p className="text-xs text-gray-500 text-center">Unique and artistic with expressive accents — ideal for design and marketing.</p>
-              <Link to="/builder" className="mt-4 block w-full py-2.5 rounded-full text-center text-sm font-bold glass hover:bg-white/10 hover:text-brand-cyan transition-all">
+              <Link to="/builder?template=creative" className="mt-4 block w-full py-2.5 rounded-full text-center text-sm font-bold glass hover:bg-white/10 hover:text-brand-cyan transition-all">
                 Use This Template
               </Link>
             </motion.div>

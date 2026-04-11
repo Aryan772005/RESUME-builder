@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useLocation } from 'react-router-dom';
 import { 
   Plus, Trash2, Wand2, Download, Layout as LayoutIcon, 
   ChevronLeft, ChevronRight, ChevronDown, Save, Cpu, 
@@ -532,7 +533,16 @@ export default function Builder() {
   const [aiResult, setAiResult] = useState<any>(null);
   const [aiType, setAiType] = useState<string>('');
   const [showMobilePreview, setShowMobilePreview] = useState(false);
-  const [template, setTemplate] = useState<TemplateType>('modern');
+  // Read template from URL query params (e.g., ?template=minimal)
+  const location = useLocation();
+  const getInitialTemplate = (): TemplateType => {
+    const params = new URLSearchParams(location.search);
+    const t = params.get('template');
+    if (t === 'minimal' || t === 'modern' || t === 'creative') return t as TemplateType;
+    return 'modern';
+  };
+  
+  const [template, setTemplate] = useState<TemplateType>(getInitialTemplate());
 
   const [isGenerating, setIsGenerating] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
