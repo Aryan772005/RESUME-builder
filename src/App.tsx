@@ -101,7 +101,7 @@ const Navbar = () => {
     <>
       <nav className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4",
-        isScrolled || mobileMenuOpen ? "bg-brand-dark/80 backdrop-blur-md border-b border-white/10 py-3 shadow-[0_4px_30px_rgba(34,211,238,0.15)]" : "bg-transparent"
+        isScrolled || mobileMenuOpen ? "bg-transparent py-3" : "bg-transparent"
       )}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link to="/" onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); setActiveNav(''); setMobileMenuOpen(false); }} className="group">
