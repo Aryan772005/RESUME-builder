@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } from 'motion/react';
 import { Link } from 'react-router-dom';
 import {
   FileText, Zap, Shield, ChevronRight, Lock,
@@ -32,22 +32,58 @@ const TypewriterText = ({ texts }: { texts: string[] }) => {
 };
 
 /* ─── FeatureCard ───────────────────────────────────────────────────────── */
-const FeatureCard = ({ icon: Icon, title, description, delay, gradient }: any) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: '-50px' }}
-    transition={{ delay, duration: 0.5 }}
-    className="glass-card glass-card-hover p-8 group relative overflow-hidden"
-  >
-    <div className={`absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-500 ${gradient}`} />
-    <div className="w-12 h-12 rounded-xl bg-brand-purple/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-brand-cyan/10 transition-all duration-300">
-      <Icon className="text-brand-purple group-hover:text-brand-cyan w-6 h-6 transition-colors duration-300" />
+const FeatureCard = ({ icon: Icon, title, description, delay, gradient }: any) => {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 });
+  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <div className="perspective-1000">
+      <motion.div
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-50px' }}
+        transition={{ delay, duration: 0.5 }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className="glass-card glass-card-hover p-8 group relative overflow-hidden"
+      >
+        <div className={`absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-500 ${gradient}`} />
+        <div style={{ transform: "translateZ(30px)" }}>
+          <div className="w-12 h-12 rounded-xl bg-brand-purple/10 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-brand-cyan/20 transition-all duration-300 relative shadow-[0_0_15px_rgba(139,92,246,0.1)] group-hover:shadow-[0_0_30px_rgba(34,211,238,0.4)]">
+            <Icon className="text-brand-purple group-hover:text-brand-cyan w-6 h-6 transition-colors duration-300" />
+            <div className="absolute inset-0 rounded-xl border border-white/5 group-hover:border-brand-cyan/30 transition-colors" />
+          </div>
+          <h3 className="text-xl font-bold mb-3 group-hover:text-white transition-colors duration-300 text-gray-100">{title}</h3>
+          <p className="text-gray-400/90 leading-relaxed text-sm">{description}</p>
+        </div>
+      </motion.div>
     </div>
-    <h3 className="text-xl font-bold mb-3 group-hover:text-brand-cyan transition-colors duration-300">{title}</h3>
-    <p className="text-gray-400 leading-relaxed">{description}</p>
-  </motion.div>
-);
+  );
+};
 
 
 /* ─── FAQ ───────────────────────────────────────────────────────────────── */
@@ -89,6 +125,13 @@ const FAQItem = ({ question, answer, delay }: any) => {
 
 /* ─── Page ──────────────────────────────────────────────────────────────── */
 export default function Home() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: containerRef });
+  
+  const yOrb1 = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const yOrb2 = useTransform(scrollYProgress, [0, 1], [0, -300]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const heroY = useTransform(scrollYProgress, [0, 0.2], [0, 100]);
   const features = [
     { icon: FileText, title: 'Smart Content Generation', description: 'Instantly generate professional summaries and impact-driven bullet points tailored to your exact industry and level.', gradient: 'bg-gradient-to-br from-brand-purple to-brand-blue' },
     { icon: Zap, title: 'ATS Optimization', description: 'Our templates are engineered to pass Applicant Tracking Systems every time — your resume will always be seen by human eyes.', gradient: 'bg-gradient-to-br from-brand-blue to-brand-cyan' },
@@ -109,7 +152,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="relative bg-brand-dark">
+    <div ref={containerRef} className="relative bg-brand-dark">
 
       {/* ── CINEMATIC VIDEO HERO ──────────────────────────────────────── */}
       <section className="relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden">
@@ -132,13 +175,17 @@ export default function Home() {
           {/* Main dark vignette */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70" />
           {/* Bottom fade — blends into next section */}
-          <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-brand-dark to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-brand-dark via-brand-dark/90 to-transparent" />
           {/* Subtle color tint matching brand */}
           <div className="absolute inset-0 bg-gradient-to-br from-brand-purple/10 via-transparent to-brand-cyan/10" />
+          
+          {/* Floating Neon Orbs */}
+          <motion.div style={{ y: yOrb1 }} className="orb w-[40rem] h-[40rem] bg-brand-cyan/20 -top-40 -left-40 mix-blend-screen" />
+          <motion.div style={{ y: yOrb2 }} className="orb w-[50rem] h-[50rem] bg-brand-purple/20 bottom-0 -right-20 mix-blend-screen" />
         </div>
 
         {/* Hero content — above all overlays */}
-        <div className="relative z-20 max-w-7xl mx-auto px-6 text-center pt-32 pb-24">
+        <motion.div style={{ opacity: heroOpacity, y: heroY }} className="relative z-20 max-w-7xl mx-auto px-6 text-center pt-32 pb-24 flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -151,15 +198,20 @@ export default function Home() {
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-black mb-8 tracking-tight leading-[1.05]"
-            style={{ textShadow: '0 4px 40px rgba(0,0,0,0.6)' }}
+            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.1, ease: 'easeOut' }}
+            className="text-5xl md:text-7xl lg:text-8xl font-black mb-8 tracking-tight leading-[1.05] text-white relative z-10"
+            style={{ textShadow: '0 4px 40px rgba(0,0,0,0.8)' }}
           >
             Build Your{' '}
-            <span className="text-gradient drop-shadow-[0_0_30px_rgba(34,211,238,0.4)]">
-              <TypewriterText texts={['Dream Resume', 'Career Future', 'Perfect Job', 'Success Story']} />
+            <span className="relative inline-block">
+              {/* Elegant, subtle backglow */}
+              <span className="absolute inset-0 bg-brand-cyan blur-[25px] opacity-30 -z-10" />
+              {/* Foreground crisp gradient text w/ drop shadow */}
+              <span className="text-gradient drop-shadow-[0_0_15px_rgba(34,211,238,0.4)] relative z-10">
+                <TypewriterText texts={['Dream Resume', 'Career Future', 'Perfect Job', 'Success Story']} />
+              </span>
             </span>
           </motion.h1>
 
@@ -178,19 +230,19 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.4 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-6"
           >
             <Link
               to="/builder"
-              className="px-9 py-4 rounded-full bg-gradient-premium neon-glow-hover text-white font-bold text-lg flex items-center gap-2 shadow-2xl"
+              className="px-10 py-5 rounded-full bg-gradient-premium neon-glow-hover text-white font-bold text-lg flex items-center gap-2 shadow-[0_0_30px_rgba(34,211,238,0.3)] transition-all"
             >
-              Build My Resume <ChevronRight className="w-5 h-5" />
+              Build My Resume <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
             <a
               href="#features"
               onClick={(e) => { e.preventDefault(); document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' }); }}
-              className="px-9 py-4 rounded-full text-white font-bold text-lg hover:text-brand-cyan transition-all"
-              style={{ background: 'rgba(255,255,255,0.10)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.18)' }}
+              className="px-9 py-4 rounded-full text-white font-bold text-lg hover:text-brand-cyan hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] transition-all"
+              style={{ background: 'rgba(255,255,255,0.05)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.1)' }}
             >
               See All Features
             </a>
@@ -209,7 +261,7 @@ export default function Home() {
             <div className="flex items-center gap-2 font-bold text-base"><Globe className="w-4 h-4 text-brand-blue" /> Industry Standard</div>
             <div className="flex items-center gap-2 font-bold text-base"><FileText className="w-4 h-4 text-brand-green" /> Free PDF Export</div>
           </motion.div>
-        </div>
+        </motion.div>
 
         {/* Scroll-down indicator */}
         <motion.div
@@ -596,9 +648,9 @@ export default function Home() {
                 </div>
                 {/* Fake file list */}
                 {[
-                  { name: 'photo-1.jpg', type: 'image', size: '1.2 MB', color: 'bg-brand-cyan/20 text-brand-cyan' },
-                  { name: 'screenshot.png', type: 'image', size: '890 KB', color: 'bg-brand-cyan/20 text-brand-cyan' },
-                  { name: 'notes.txt', type: 'text', size: '4 KB', color: 'bg-brand-purple/20 text-brand-purple' },
+                  { name: 'photo-1.jpg', type: 'image', size: '1.2 MB', color: 'bg-brand-cyan/20 text-brand-cyan shadow-[0_0_10px_rgba(34,211,238,0.2)]' },
+                  { name: 'screenshot.png', type: 'image', size: '890 KB', color: 'bg-brand-cyan/20 text-brand-cyan shadow-[0_0_10px_rgba(34,211,238,0.2)]' },
+                  { name: 'notes.txt', type: 'text', size: '4 KB', color: 'bg-brand-purple/20 text-brand-purple shadow-[0_0_10px_rgba(139,92,246,0.2)]' },
                 ].map((f, i) => (
                   <div key={i} className="flex items-center gap-3 p-3 rounded-xl glass mb-2">
                     <div className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${f.color} shrink-0`}>{f.type}</div>
@@ -644,26 +696,34 @@ export default function Home() {
       {/* ── CTA ──────────────────────────────────────────────────────── */}
       <section className="relative z-10 py-20 px-6 mb-12">
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.6 }}
-          className="max-w-5xl mx-auto glass-card p-12 text-center relative overflow-hidden"
+           initial={{ opacity: 0, scale: 0.95 }}
+           whileInView={{ opacity: 1, scale: 1 }}
+           viewport={{ once: true, margin: '-50px' }}
+           transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
+          className="max-w-5xl mx-auto glass-card p-12 text-center relative overflow-hidden perspective-1000 shadow-[0_0_60px_rgba(139,92,246,0.15)] group"
         >
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-premium" />
-          <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-brand-cyan/10 rounded-full blur-3xl" />
-          <div className="absolute -top-20 -left-20 w-64 h-64 bg-brand-purple/10 rounded-full blur-3xl" />
-          <FileText className="w-10 h-10 text-brand-cyan mx-auto mb-6" />
-          <h2 className="text-4xl md:text-5xl font-black mb-6">Ready to land your dream job?</h2>
-          <p className="text-gray-400 mb-10 text-lg max-w-xl mx-auto">
-            Join professionals who have accelerated their careers with Tariani's Resume Builder. It takes less than 5 minutes.
-          </p>
-          <Link
-            to="/builder"
-            className="px-10 py-5 rounded-full bg-gradient-premium neon-glow-hover text-white font-black text-xl inline-flex items-center gap-3"
-          >
-            Get Started — It's Free <ChevronRight className="w-6 h-6" />
-          </Link>
+          <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-brand-cyan/20 rounded-full blur-[100px] group-hover:scale-150 transition-transform duration-700" />
+          <div className="absolute -top-20 -left-20 w-64 h-64 bg-brand-purple/20 rounded-full blur-[100px] group-hover:scale-150 transition-transform duration-700" />
+          
+          <div className="relative z-10">
+            <motion.div 
+               animate={{ y: [0, -10, 0] }}
+               transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+            >
+              <FileText className="w-12 h-12 text-brand-cyan mx-auto mb-6 drop-shadow-[0_0_15px_rgba(34,211,238,0.5)]" />
+            </motion.div>
+            <h2 className="text-4xl md:text-5xl font-black mb-6">Ready to land your dream job?</h2>
+            <p className="text-gray-400 mb-10 text-lg max-w-xl mx-auto leading-relaxed">
+              Join professionals who have accelerated their careers with Tariani's Resume Builder. It takes less than 5 minutes.
+            </p>
+            <Link
+              to="/builder"
+              className="px-10 py-5 rounded-full bg-gradient-premium neon-glow-hover text-white font-black text-xl inline-flex items-center gap-3 shadow-[0_0_30px_rgba(139,92,246,0.3)] transition-all hover:scale-105"
+            >
+              Get Started — It's Free <ChevronRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
+            </Link>
+          </div>
         </motion.div>
       </section>
     </div>

@@ -40,6 +40,27 @@ const ScrollToTop = () => {
   return null;
 };
 
+const MouseGlow = () => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setPosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  return (
+    <motion.div 
+      className="pointer-events-none fixed inset-0 z-0 transition-opacity duration-300"
+      animate={{
+        background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(34, 211, 238, 0.05), transparent 40%)`
+      }}
+    />
+  );
+};
+
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
@@ -65,7 +86,7 @@ const Navbar = () => {
   return (
     <nav className={cn(
       "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4",
-      isScrolled ? "bg-brand-dark/80 backdrop-blur-md border-b border-brand-border py-3 shadow-[0_4px_30px_rgba(0,0,0,0.1)]" : "bg-transparent"
+      isScrolled ? "bg-transparent border-b border-white/10 py-3 shadow-[0_4px_30px_rgba(34,211,238,0.15)]" : "bg-transparent"
     )}>
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="group">
@@ -73,9 +94,9 @@ const Navbar = () => {
         </Link>
         
         <div className="hidden md:flex items-center gap-8">
-          <a href="/#features" onClick={(e) => { e.preventDefault(); handleSectionNav('features'); }} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">Features</a>
-          <a href="/#templates" onClick={(e) => { e.preventDefault(); handleSectionNav('templates'); }} className="text-sm font-medium text-gray-400 hover:text-white transition-colors">Templates</a>
-          <Link to="/pdf-maker" className="text-sm font-medium text-brand-cyan hover:text-white transition-colors">JPG to PDF Maker</Link>
+          <a href="/#features" onClick={(e) => { e.preventDefault(); handleSectionNav('features'); }} className="text-sm font-medium text-gray-400 hover:text-white transition-colors cursor-pointer">Features</a>
+          <a href="/#templates" onClick={(e) => { e.preventDefault(); handleSectionNav('templates'); }} className="text-sm font-medium text-gray-400 hover:text-white transition-colors cursor-pointer">Templates</a>
+          <Link to="/pdf-maker" className="text-sm font-medium text-brand-cyan hover:text-white transition-colors cursor-pointer">JPG to PDF Maker</Link>
           
           {user ? (
             <div className="flex items-center gap-4">
@@ -98,7 +119,7 @@ const Navbar = () => {
               </button>
               <Link 
                 to="/builder" 
-                className="px-5 py-2.5 rounded-full bg-gradient-premium neon-glow-hover text-white text-sm font-semibold transition-all"
+                className="px-5 py-2.5 rounded-full bg-gradient-premium neon-glow-hover text-white text-sm font-semibold transition-all shadow-[0_0_15px_rgba(34,211,238,0.2)]"
               >
                 Go to Builder
               </Link>
@@ -113,7 +134,7 @@ const Navbar = () => {
               </button>
               <button 
                 onClick={signIn}
-                className="px-5 py-2.5 rounded-full bg-gradient-premium neon-glow-hover text-white text-sm font-semibold transition-all"
+                className="px-5 py-2.5 rounded-full bg-gradient-premium neon-glow-hover text-white text-sm font-semibold transition-all shadow-[0_0_15px_rgba(34,211,238,0.2)]"
               >
                 Get Started
               </button>
@@ -130,42 +151,43 @@ const Navbar = () => {
 };
 
 const Footer = () => (
-  <footer className="border-t border-brand-border py-12 px-6 bg-brand-dark">
-    <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+  <footer className="relative border-t border-brand-border py-12 px-6 bg-brand-dark overflow-hidden">
+    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[1px] bg-gradient-to-r from-transparent via-brand-cyan/20 to-transparent" />
+    <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
       <div className="col-span-1 md:col-span-2">
-        <div className="flex items-center gap-2 mb-6">
+        <div className="flex items-center gap-2 mb-6 group cursor-pointer">
           <Logo size={32} />
-          <span className="text-lg font-bold">Tariani's Resume Builder</span>
+          <span className="text-lg font-bold group-hover:text-brand-cyan transition-colors">Tariani's Resume Builder</span>
         </div>
         <p className="text-gray-400 max-w-sm mb-6">
           A professional resume &amp; PDF builder by Aryan Singh Tariani. ATS-friendly resume templates, smart content, and a free PDF maker tool — all in one place.
         </p>
         <div className="flex gap-4">
-          <a href="https://github.com/Aryan772005" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full glass hover:bg-white/10 hover:text-brand-cyan transition-colors"><Github className="w-5 h-5" /></a>
-          <a href="https://www.linkedin.com/in/aryan-singh-tariani" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full glass hover:bg-white/10 hover:text-brand-cyan transition-colors"><Linkedin className="w-5 h-5" /></a>
-          <a href="mailto:aryansinghtariani@gmail.com" className="p-2 rounded-full glass hover:bg-white/10 hover:text-brand-cyan transition-colors"><Mail className="w-5 h-5" /></a>
+          <a href="https://github.com/Aryan772005" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full glass hover:bg-white/10 hover:text-brand-cyan transition-colors hover:shadow-[0_0_15px_rgba(34,211,238,0.3)]"><Github className="w-5 h-5" /></a>
+          <a href="https://www.linkedin.com/in/aryan-singh-tariani" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full glass hover:bg-white/10 hover:text-brand-cyan transition-colors hover:shadow-[0_0_15px_rgba(34,211,238,0.3)]"><Linkedin className="w-5 h-5" /></a>
+          <a href="mailto:aryansinghtariani@gmail.com" className="p-2 rounded-full glass hover:bg-white/10 hover:text-brand-cyan transition-colors hover:shadow-[0_0_15px_rgba(34,211,238,0.3)]"><Mail className="w-5 h-5" /></a>
         </div>
       </div>
       <div>
-        <h4 className="font-bold mb-6">Product</h4>
+        <h4 className="font-bold mb-6 text-white">Product</h4>
         <ul className="space-y-4 text-gray-400 text-sm">
-          <li><Link to="/builder" className="hover:text-brand-cyan transition-colors">Resume Builder</Link></li>
-          <li><Link to="/pdf-maker" className="hover:text-brand-cyan transition-colors">JPG to PDF Maker</Link></li>
-          <li><a href="#" className="hover:text-brand-cyan transition-colors">Templates</a></li>
-          <li><a href="#" className="hover:text-brand-cyan transition-colors">ATS Check</a></li>
+          <li><Link to="/builder" className="hover:text-brand-cyan hover:translate-x-1 transition-all inline-block">Resume Builder</Link></li>
+          <li><Link to="/pdf-maker" className="hover:text-brand-cyan hover:translate-x-1 transition-all inline-block">JPG to PDF Maker</Link></li>
+          <li><a href="#" className="hover:text-brand-cyan hover:translate-x-1 transition-all inline-block">Templates</a></li>
+          <li><a href="#" className="hover:text-brand-cyan hover:translate-x-1 transition-all inline-block">ATS Check</a></li>
         </ul>
       </div>
       <div>
-        <h4 className="font-bold mb-6">Company</h4>
+        <h4 className="font-bold mb-6 text-white">Company</h4>
         <ul className="space-y-4 text-gray-400 text-sm">
-          <li><a href="#" className="hover:text-brand-cyan transition-colors">About Us</a></li>
-          <li><a href="#" className="hover:text-brand-cyan transition-colors">Privacy Policy</a></li>
-          <li><a href="#" className="hover:text-brand-cyan transition-colors">Terms of Service</a></li>
-          <li><a href="#" className="hover:text-brand-cyan transition-colors">Contact</a></li>
+          <li><a href="#" className="hover:text-brand-cyan hover:translate-x-1 transition-all inline-block">About Us</a></li>
+          <li><a href="#" className="hover:text-brand-cyan hover:translate-x-1 transition-all inline-block">Privacy Policy</a></li>
+          <li><a href="#" className="hover:text-brand-cyan hover:translate-x-1 transition-all inline-block">Terms of Service</a></li>
+          <li><a href="#" className="hover:text-brand-cyan hover:translate-x-1 transition-all inline-block">Contact</a></li>
         </ul>
       </div>
     </div>
-    <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-brand-border text-center text-gray-500 text-sm">
+    <div className="max-w-7xl mx-auto mt-12 pt-8 border-t border-brand-border/50 text-center text-gray-500 text-sm">
       © {new Date().getFullYear()} Aryan Singh Tariani. All rights reserved.
     </div>
   </footer>
@@ -177,22 +199,23 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   if (loading) {
     return (
       <div className="min-h-screen bg-brand-dark flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-12 h-12 border-4 border-brand-cyan border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
   
   if (!user) {
     return (
-      <div className="min-h-screen bg-brand-dark flex flex-col items-center justify-center p-6 text-center">
-        <div className="w-20 h-20 rounded-2xl bg-brand-purple/10 flex items-center justify-center mb-8">
+      <div className="min-h-screen bg-brand-dark flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-purple/10 to-brand-cyan/10" />
+        <div className="w-20 h-20 rounded-2xl bg-brand-purple/10 flex items-center justify-center mb-8 relative z-10 neon-glow">
           <Logo size={52} />
         </div>
-        <h2 className="text-3xl font-bold mb-4">Sign in to continue</h2>
-        <p className="text-gray-400 max-w-md mb-8">You need a Google account to build, save, and download your professional resume.</p>
+        <h2 className="text-3xl font-bold mb-4 relative z-10">Sign in to continue</h2>
+        <p className="text-gray-400 max-w-md mb-8 relative z-10">You need a Google account to build, save, and download your professional resume.</p>
         <button 
           onClick={signIn}
-          className="px-8 py-4 rounded-full bg-gradient-premium neon-glow-hover text-white font-bold text-lg flex items-center gap-2"
+          className="px-8 py-4 rounded-full bg-gradient-premium neon-glow-hover text-white font-bold text-lg flex items-center gap-2 relative z-10"
         >
           <LogIn className="w-5 h-5" /> Sign In with Google
         </button>
@@ -207,18 +230,21 @@ export default function App() {
   return (
     <Router>
       <ScrollToTop />
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-brand-dark relative selection:bg-brand-cyan/30 selection:text-white">
+        <MouseGlow />
         <Navbar />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/pdf-maker" element={<PdfMaker />} />
-            <Route path="/builder" element={
-              <ProtectedRoute>
-                <Builder />
-              </ProtectedRoute>
-            } />
-          </Routes>
+        <main className="flex-grow relative z-10">
+          <AnimatePresence mode="wait">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/pdf-maker" element={<PdfMaker />} />
+              <Route path="/builder" element={
+                <ProtectedRoute>
+                  <Builder />
+                </ProtectedRoute>
+              } />
+            </Routes>
+          </AnimatePresence>
         </main>
         <Footer />
       </div>

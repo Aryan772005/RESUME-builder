@@ -446,11 +446,12 @@ export default function PdfMaker() {
                 <AnimatePresence>
                   {files.map((item, idx) => (
                     <motion.div
+                      layout
                       key={item.id}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20, height: 0 }}
-                      transition={{ duration: 0.2 }}
+                      transition={{ duration: 0.2, layout: { type: "spring", stiffness: 300, damping: 30 } }}
                       className="flex items-center gap-4 px-6 py-4 hover:bg-white/[0.02] group"
                     >
                       <GripVertical className="w-4 h-4 text-gray-600 shrink-0 cursor-grab" />
