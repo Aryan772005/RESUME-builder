@@ -249,10 +249,18 @@ export default function PdfMaker() {
 
   return (
     <div className="min-h-screen bg-brand-dark pt-28 pb-20 px-6">
-      {/* Background orbs */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-10">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-brand-cyan rounded-full blur-[180px]" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-purple rounded-full blur-[180px]" />
+      {/* Animated Background Orbs */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-30">
+        <motion.div 
+          animate={{ x: [0, 80, 0], y: [0, -40, 0], opacity: [0.4, 0.7, 0.4] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-0 left-0 w-[40vw] h-[40vw] bg-brand-cyan rounded-full blur-[180px]" 
+        />
+        <motion.div 
+          animate={{ x: [0, -80, 0], y: [0, 40, 0], opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-0 right-0 w-[40vw] h-[40vw] bg-brand-purple rounded-full blur-[180px]" 
+        />
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto">

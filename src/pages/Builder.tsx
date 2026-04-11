@@ -775,7 +775,21 @@ Ensure all IDs are unique strings (e.g., "exp-1", "edu-1"). Do not include markd
   };
 
   return (
-    <div className="pt-24 min-h-screen bg-brand-dark flex flex-col">
+    <div className="pt-24 min-h-screen bg-brand-dark flex flex-col relative overflow-hidden">
+      {/* Animated Background Orbs */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-30">
+        <motion.div 
+          animate={{ x: [0, 100, 0], y: [0, -50, 0], opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[20%] left-[10%] w-[35vw] h-[35vw] bg-brand-cyan rounded-full blur-[180px]" 
+        />
+        <motion.div 
+          animate={{ x: [0, -100, 0], y: [0, 50, 0], opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-[10%] right-[10%] w-[40vw] h-[40vw] bg-brand-purple rounded-full blur-[180px]" 
+        />
+      </div>
+
       {/* Toolbar */}
       <div className="glass border-b border-brand-border px-6 py-3 flex items-center justify-between sticky top-[72px] z-40">
         <div className="flex items-center gap-4">
