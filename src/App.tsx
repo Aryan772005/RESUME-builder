@@ -96,6 +96,7 @@ const Navbar = () => {
         <div className="hidden md:flex items-center gap-8">
           <a href="/#features" onClick={(e) => { e.preventDefault(); handleSectionNav('features'); }} className="text-sm font-medium text-gray-400 hover:text-white transition-colors cursor-pointer">Features</a>
           <a href="/#templates" onClick={(e) => { e.preventDefault(); handleSectionNav('templates'); }} className="text-sm font-medium text-gray-400 hover:text-white transition-colors cursor-pointer">Templates</a>
+          <Link to="/builder" className="text-sm font-medium text-gray-400 hover:text-white transition-colors cursor-pointer">Resume Builder</Link>
           <Link to="/pdf-maker" className="text-sm font-medium text-brand-cyan hover:text-white transition-colors cursor-pointer">JPG to PDF Maker</Link>
           
           {user ? (
