@@ -67,10 +67,22 @@ const Navbar = () => {
   const navigate = useNavigate();
   const { user, signIn, signOut } = useAuth();
 
+  const [activeNav, setActiveNav] = useState('');
+
+  useEffect(() => {
+    if (location.pathname === '/builder') setActiveNav('builder');
+    else if (location.pathname === '/pdf-maker') setActiveNav('pdf-maker');
+    else if (location.pathname === '/' && location.hash) setActiveNav(location.hash.replace('#', ''));
+    else if (location.pathname === '/') setActiveNav('');
+  }, [location.pathname, location.hash]);
+
   const handleSectionNav = (sectionId: string) => {
+    setActiveNav(sectionId);
     if (location.pathname === '/') {
       // Already on home — just scroll
       scrollToSection(sectionId);
+      // Update the URL without jumping so it can be shared/bookmarked
+      window.history.pushState(null, '', `/#${sectionId}`);
     } else {
       // Navigate to home with hash, ScrollToTop will handle the scroll
       navigate(`/#${sectionId}`);
@@ -89,15 +101,15 @@ const Navbar = () => {
       isScrolled ? "bg-transparent border-b border-white/10 py-3 shadow-[0_4px_30px_rgba(34,211,238,0.15)]" : "bg-transparent"
     )}>
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="group">
+        <Link to="/" onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); setActiveNav(''); }} className="group">
           <LogoWordmark iconSize={36} />
         </Link>
         
         <div className="hidden md:flex items-center gap-8">
-          <a href="/#features" onClick={(e) => { e.preventDefault(); handleSectionNav('features'); }} className="text-sm font-medium text-gray-400 hover:text-white transition-colors cursor-pointer">Features</a>
-          <a href="/#templates" onClick={(e) => { e.preventDefault(); handleSectionNav('templates'); }} className="text-sm font-medium text-gray-400 hover:text-white transition-colors cursor-pointer">Templates</a>
-          <Link to="/builder" className="text-sm font-medium text-gray-400 hover:text-white transition-colors cursor-pointer">Resume Builder</Link>
-          <Link to="/pdf-maker" className="text-sm font-medium text-brand-cyan hover:text-white transition-colors cursor-pointer">JPG to PDF Maker</Link>
+          <a href="/#features" onClick={(e) => { e.preventDefault(); handleSectionNav('features'); }} className={cn("text-sm font-medium transition-colors cursor-pointer", activeNav === 'features' ? "text-brand-cyan" : "text-gray-400 hover:text-white")}>Features</a>
+          <a href="/#templates" onClick={(e) => { e.preventDefault(); handleSectionNav('templates'); }} className={cn("text-sm font-medium transition-colors cursor-pointer", activeNav === 'templates' ? "text-brand-cyan" : "text-gray-400 hover:text-white")}>Templates</a>
+          <Link to="/builder" onClick={() => setActiveNav('builder')} className={cn("text-sm font-medium transition-colors cursor-pointer", activeNav === 'builder' ? "text-brand-cyan" : "text-gray-400 hover:text-white")}>Resume Builder</Link>
+          <Link to="/pdf-maker" onClick={() => setActiveNav('pdf-maker')} className={cn("text-sm font-medium transition-colors cursor-pointer", activeNav === 'pdf-maker' ? "text-brand-cyan" : "text-gray-400 hover:text-white")}>JPG to PDF Maker</Link>
           
           {user ? (
             <div className="flex items-center gap-4">
