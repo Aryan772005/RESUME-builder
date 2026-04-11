@@ -146,23 +146,7 @@ const DEMO_DATA = {
   ],
 };
 
-// Merge user data with demo fallback values so preview is never blank
-const mergeWithDemo = (data: any) => ({
-  personalInfo: {
-    fullName: data.personalInfo.fullName || DEMO_DATA.personalInfo.fullName,
-    email: data.personalInfo.email || DEMO_DATA.personalInfo.email,
-    phone: data.personalInfo.phone || DEMO_DATA.personalInfo.phone,
-    location: data.personalInfo.location || DEMO_DATA.personalInfo.location,
-    linkedin: data.personalInfo.linkedin || DEMO_DATA.personalInfo.linkedin,
-    portfolio: data.personalInfo.portfolio || DEMO_DATA.personalInfo.portfolio,
-    summary: data.personalInfo.summary || DEMO_DATA.personalInfo.summary,
-  },
-  experience: data.experience.length > 0 ? data.experience : DEMO_DATA.experience,
-  education: data.education.length > 0 ? data.education : DEMO_DATA.education,
-  skills: data.skills.length > 0 ? data.skills : DEMO_DATA.skills,
-  projects: data.projects.length > 0 ? data.projects : DEMO_DATA.projects,
-  certifications: data.certifications.length > 0 ? data.certifications : DEMO_DATA.certifications,
-});
+
 
 const MinimalTemplate = ({ data }: { data: any }) => (
   <div style={{ padding: '48px', fontFamily: 'Georgia, serif', minHeight: '1122px', backgroundColor: '#ffffff', color: '#111' }}>
@@ -549,7 +533,7 @@ export default function Builder() {
   const [aiType, setAiType] = useState<string>('');
   const [showMobilePreview, setShowMobilePreview] = useState(false);
   const [template, setTemplate] = useState<TemplateType>('modern');
-  const [useSampleData, setUseSampleData] = useState(true);
+
   const [isGenerating, setIsGenerating] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
   const [targetRole, setTargetRole] = useState('');
@@ -1044,26 +1028,6 @@ Ensure all IDs are unique strings (e.g., "exp-1", "edu-1"). Do not include markd
                 <section>
                   <SectionHeader icon={LayoutIcon} title="Choose Template" />
 
-                  {/* Sample Data Toggle */}
-                  <div className="flex items-center justify-between glass-card p-4 rounded-xl mb-6">
-                    <div>
-                      <h4 className="font-bold text-white text-sm">Use Sample Data</h4>
-                      <p className="text-[11px] text-gray-400 mt-0.5">Shows demo content in preview so you can see the template design</p>
-                    </div>
-                    <button
-                      onClick={() => setUseSampleData(!useSampleData)}
-                      className={cn(
-                        "w-12 h-6 rounded-full relative transition-all duration-300",
-                        useSampleData ? "bg-brand-cyan" : "bg-gray-600"
-                      )}
-                    >
-                      <span className={cn(
-                        "absolute top-0.5 w-5 h-5 bg-white rounded-full transition-all duration-300 shadow-md",
-                        useSampleData ? "left-6" : "left-0.5"
-                      )} />
-                    </button>
-                  </div>
-
                   {/* Template Cards - Real Live Mini Previews */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
 
@@ -1127,9 +1091,9 @@ Ensure all IDs are unique strings (e.g., "exp-1", "edu-1"). Do not include markd
               className="origin-top transition-all duration-500 overflow-hidden bg-white"
               style={{ boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}
             >
-              {template === 'minimal' && <MinimalTemplate data={useSampleData ? mergeWithDemo(data) : data} />}
-              {template === 'modern' && <ModernTemplate data={useSampleData ? mergeWithDemo(data) : data} />}
-              {template === 'creative' && <CreativeTemplate data={useSampleData ? mergeWithDemo(data) : data} />}
+              {template === 'minimal' && <MinimalTemplate data={data} />}
+              {template === 'modern' && <ModernTemplate data={data} />}
+              {template === 'creative' && <CreativeTemplate data={data} />}
             </div>
           </div>
         </div>

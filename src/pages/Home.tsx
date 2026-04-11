@@ -365,36 +365,168 @@ export default function Home() {
             <p className="text-gray-400 max-w-xl mx-auto">Expertly designed for every industry and career level.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { name: 'Minimal', desc: 'Clean, elegant, and timeless. Perfect for finance, consulting, and law.', color: 'bg-white', badge: 'Classic' },
-              { name: 'Modern', desc: 'Bold and structured with a strong visual hierarchy. Great for tech roles.', color: 'bg-blue-50', badge: 'Popular' },
-              { name: 'Creative', desc: 'Unique and artistic with expressive accents — ideal for design and marketing.', color: 'bg-purple-50', badge: 'Trending' },
-            ].map((t, i) => (
-              <motion.div
-                key={t.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="glass-card p-5 group cursor-pointer relative overflow-hidden"
-              >
-                <div className="absolute top-4 right-4 bg-gradient-premium text-white text-[10px] font-black px-2.5 py-1 rounded-full tracking-wider">
-                  {t.badge}
+            {/* Minimal Template Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0 }}
+              className="glass-card p-5 group cursor-pointer relative overflow-hidden"
+            >
+              <div className="absolute top-4 right-4 bg-gradient-premium text-white text-[10px] font-black px-2.5 py-1 rounded-full tracking-wider">Classic</div>
+              <div className="w-full aspect-[3/4] rounded-xl mb-5 overflow-hidden relative" style={{ backgroundColor: '#0d1117' }}>
+                <div className="absolute inset-0 bg-gradient-premium opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
+                {/* Mini Minimal Template Preview */}
+                <div style={{ position: 'absolute', inset: '16px', backgroundColor: '#fff', borderRadius: '8px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px', boxShadow: '0 4px 20px rgba(0,0,0,0.3)', transition: 'transform 0.5s' }} className="group-hover:scale-105">
+                  <div style={{ textAlign: 'center', borderBottom: '2px solid #222', paddingBottom: '10px' }}>
+                    <div style={{ height: '8px', width: '60%', backgroundColor: '#111', borderRadius: '4px', margin: '0 auto 6px' }}></div>
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
+                      <div style={{ height: '4px', width: '40px', backgroundColor: '#ccc', borderRadius: '4px' }}></div>
+                      <div style={{ height: '4px', width: '40px', backgroundColor: '#ccc', borderRadius: '4px' }}></div>
+                    </div>
+                  </div>
+                  <div style={{ height: '4px', width: '40%', backgroundColor: '#ddd', borderRadius: '4px' }}></div>
+                  <div style={{ height: '4px', width: '100%', backgroundColor: '#eee', borderRadius: '4px' }}></div>
+                  <div style={{ height: '4px', width: '85%', backgroundColor: '#eee', borderRadius: '4px' }}></div>
+                  <div style={{ height: '4px', width: '30%', backgroundColor: '#ddd', borderRadius: '4px', marginTop: '4px' }}></div>
+                  <div style={{ height: '4px', width: '100%', backgroundColor: '#eee', borderRadius: '4px' }}></div>
+                  <div style={{ height: '4px', width: '70%', backgroundColor: '#eee', borderRadius: '4px' }}></div>
+                  <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ height: '4px', width: '50%', backgroundColor: '#ddd', borderRadius: '4px', marginBottom: '4px' }}></div>
+                      <div style={{ height: '4px', width: '100%', backgroundColor: '#f3f4f6', borderRadius: '4px' }}></div>
+                      <div style={{ height: '4px', width: '80%', backgroundColor: '#f3f4f6', borderRadius: '4px', marginTop: '3px' }}></div>
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ height: '4px', width: '50%', backgroundColor: '#ddd', borderRadius: '4px', marginBottom: '4px' }}></div>
+                      <div style={{ height: '4px', width: '100%', backgroundColor: '#f3f4f6', borderRadius: '4px' }}></div>
+                      <div style={{ height: '4px', width: '80%', backgroundColor: '#f3f4f6', borderRadius: '4px', marginTop: '3px' }}></div>
+                    </div>
+                  </div>
                 </div>
-                <div className="w-full aspect-[3/4] bg-brand-dark rounded-xl mb-5 flex items-center justify-center overflow-hidden relative">
-                  <div className="absolute inset-0 bg-gradient-premium opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
-                  <div className={cn('w-1/2 h-1/2 rounded-lg shadow-xl transition-transform duration-500 group-hover:scale-110', t.color)} />
+              </div>
+              <h3 className="text-xl font-bold capitalize text-center mb-1">Minimal</h3>
+              <p className="text-xs text-gray-500 text-center">Clean, elegant, and timeless. Perfect for finance, consulting, and law.</p>
+              <Link to="/builder" className="mt-4 block w-full py-2.5 rounded-full text-center text-sm font-bold glass hover:bg-white/10 hover:text-brand-cyan transition-all">
+                Use This Template
+              </Link>
+            </motion.div>
+
+            {/* Modern Template Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="glass-card p-5 group cursor-pointer relative overflow-hidden"
+            >
+              <div className="absolute top-4 right-4 bg-gradient-premium text-white text-[10px] font-black px-2.5 py-1 rounded-full tracking-wider">Popular</div>
+              <div className="w-full aspect-[3/4] rounded-xl mb-5 overflow-hidden relative" style={{ backgroundColor: '#0d1117' }}>
+                <div className="absolute inset-0 bg-gradient-premium opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
+                {/* Mini Modern Template Preview - Navy sidebar + white */}
+                <div style={{ position: 'absolute', inset: '16px', borderRadius: '8px', display: 'flex', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.3)', transition: 'transform 0.5s' }} className="group-hover:scale-105">
+                  <div style={{ width: '35%', backgroundColor: '#0a2540', padding: '12px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#0d3461', border: '2px solid rgba(255,255,255,0.25)' }}></div>
+                    <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.1)', margin: '4px 0' }}></div>
+                    <div style={{ height: '3px', width: '100%', backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: '4px' }}></div>
+                    <div style={{ height: '3px', width: '80%', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '4px' }}></div>
+                    <div style={{ height: '3px', width: '80%', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '4px' }}></div>
+                    <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.1)', margin: '4px 0' }}></div>
+                    <div style={{ height: '3px', width: '100%', backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: '4px' }}></div>
+                    <div style={{ height: '3px', width: '80%', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '4px' }}></div>
+                    <div style={{ height: '3px', width: '60%', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '4px' }}></div>
+                    <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(255,255,255,0.1)', margin: '4px 0' }}></div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', width: '100%' }}>
+                      <div style={{ height: '3px', width: '100%', backgroundColor: 'rgba(255,255,255,0.12)', borderRadius: '4px' }}></div>
+                      <div style={{ height: '3px', width: '70%', backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: '4px' }}></div>
+                    </div>
+                  </div>
+                  <div style={{ flex: 1, backgroundColor: '#fff', padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <div style={{ height: '10px', width: '80%', backgroundColor: '#111', borderRadius: '4px' }}></div>
+                    <div style={{ height: '4px', width: '50%', backgroundColor: '#ccc', borderRadius: '4px' }}></div>
+                    <div style={{ width: '100%', height: '2px', backgroundColor: '#e5e7eb', margin: '4px 0' }}></div>
+                    <div style={{ height: '3px', width: '30%', backgroundColor: '#ddd', borderRadius: '4px' }}></div>
+                    <div style={{ paddingLeft: '8px', borderLeft: '2px solid #e5e7eb', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                      <div style={{ height: '3px', width: '70%', backgroundColor: '#333', borderRadius: '4px' }}></div>
+                      <div style={{ height: '3px', width: '50%', backgroundColor: '#0a2540', borderRadius: '4px', opacity: 0.5 }}></div>
+                      <div style={{ height: '3px', width: '100%', backgroundColor: '#eee', borderRadius: '4px' }}></div>
+                    </div>
+                    <div style={{ height: '3px', width: '30%', backgroundColor: '#ddd', borderRadius: '4px', marginTop: '4px' }}></div>
+                    <div style={{ paddingLeft: '8px', borderLeft: '2px solid #e5e7eb', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                      <div style={{ height: '3px', width: '70%', backgroundColor: '#333', borderRadius: '4px' }}></div>
+                      <div style={{ height: '3px', width: '100%', backgroundColor: '#eee', borderRadius: '4px' }}></div>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold capitalize text-center mb-1">{t.name}</h3>
-                <p className="text-xs text-gray-500 text-center">{t.desc}</p>
-                <Link
-                  to="/builder"
-                  className="mt-4 block w-full py-2.5 rounded-full text-center text-sm font-bold glass hover:bg-white/10 hover:text-brand-cyan transition-all"
-                >
-                  Use This Template
-                </Link>
-              </motion.div>
-            ))}
+              </div>
+              <h3 className="text-xl font-bold capitalize text-center mb-1">Modern</h3>
+              <p className="text-xs text-gray-500 text-center">Bold and structured with a strong visual hierarchy. Great for tech roles.</p>
+              <Link to="/builder" className="mt-4 block w-full py-2.5 rounded-full text-center text-sm font-bold glass hover:bg-white/10 hover:text-brand-cyan transition-all">
+                Use This Template
+              </Link>
+            </motion.div>
+
+            {/* Creative Template Card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="glass-card p-5 group cursor-pointer relative overflow-hidden"
+            >
+              <div className="absolute top-4 right-4 bg-gradient-premium text-white text-[10px] font-black px-2.5 py-1 rounded-full tracking-wider">Trending</div>
+              <div className="w-full aspect-[3/4] rounded-xl mb-5 overflow-hidden relative" style={{ backgroundColor: '#0d1117' }}>
+                <div className="absolute inset-0 bg-gradient-premium opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
+                {/* Mini Creative Template Preview - Dark left + yellow accents */}
+                <div style={{ position: 'absolute', inset: '16px', borderRadius: '8px', display: 'flex', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.3)', transition: 'transform 0.5s' }} className="group-hover:scale-105">
+                  <div style={{ width: '38%', backgroundColor: '#1a1a1a', display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ width: '100%', aspectRatio: '1', backgroundColor: '#252525', borderBottom: '3px solid #111', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#333' }}></div>
+                    </div>
+                    <div style={{ padding: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <div style={{ borderLeft: '3px solid #facc15', paddingLeft: '6px' }}>
+                        <div style={{ height: '3px', width: '100%', backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: '4px' }}></div>
+                      </div>
+                      <div style={{ height: '3px', width: '100%', backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: '4px' }}></div>
+                      <div style={{ height: '3px', width: '80%', backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: '4px' }}></div>
+                      <div style={{ borderLeft: '3px solid #facc15', paddingLeft: '6px', marginTop: '4px' }}>
+                        <div style={{ height: '3px', width: '100%', backgroundColor: 'rgba(255,255,255,0.15)', borderRadius: '4px' }}></div>
+                      </div>
+                      <div>
+                        <div style={{ height: '3px', width: '100%', backgroundColor: '#444', borderRadius: '4px', marginBottom: '3px' }}></div>
+                        <div style={{ height: '3px', width: '75%', backgroundColor: '#facc15', borderRadius: '4px', opacity: 0.6 }}></div>
+                      </div>
+                      <div>
+                        <div style={{ height: '3px', width: '100%', backgroundColor: '#444', borderRadius: '4px', marginBottom: '3px' }}></div>
+                        <div style={{ height: '3px', width: '55%', backgroundColor: '#facc15', borderRadius: '4px', opacity: 0.6 }}></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ flex: 1, backgroundColor: '#fafafa', padding: '12px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    <div style={{ position: 'relative', marginBottom: '4px' }}>
+                      <div style={{ height: '10px', width: '80%', backgroundColor: '#111', borderRadius: '4px', position: 'relative', zIndex: 1 }}></div>
+                      <div style={{ position: 'absolute', bottom: '0', left: '0', width: '60%', height: '6px', backgroundColor: '#facc15', opacity: 0.7 }}></div>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '3px', borderLeft: '2px dotted #ccc', paddingLeft: '8px', marginBottom: '4px' }}>
+                      <div style={{ height: '3px', width: '80%', backgroundColor: '#ccc', borderRadius: '4px' }}></div>
+                      <div style={{ height: '3px', width: '60%', backgroundColor: '#ccc', borderRadius: '4px' }}></div>
+                    </div>
+                    <div style={{ width: '100%', height: '1px', backgroundColor: '#e5e7eb' }}></div>
+                    <div style={{ height: '3px', width: '40%', backgroundColor: '#ddd', borderRadius: '4px' }}></div>
+                    <div style={{ height: '3px', width: '50%', backgroundColor: '#facc15', borderRadius: '4px', opacity: 0.4 }}></div>
+                    <div style={{ height: '3px', width: '100%', backgroundColor: '#eee', borderRadius: '4px' }}></div>
+                    <div style={{ height: '3px', width: '80%', backgroundColor: '#eee', borderRadius: '4px' }}></div>
+                    <div style={{ height: '3px', width: '40%', backgroundColor: '#ddd', borderRadius: '4px', marginTop: '4px' }}></div>
+                    <div style={{ height: '3px', width: '100%', backgroundColor: '#eee', borderRadius: '4px' }}></div>
+                  </div>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold capitalize text-center mb-1">Creative</h3>
+              <p className="text-xs text-gray-500 text-center">Unique and artistic with expressive accents — ideal for design and marketing.</p>
+              <Link to="/builder" className="mt-4 block w-full py-2.5 rounded-full text-center text-sm font-bold glass hover:bg-white/10 hover:text-brand-cyan transition-all">
+                Use This Template
+              </Link>
+            </motion.div>
           </div>
         </div>
       </section>
